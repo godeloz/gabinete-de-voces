@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>El gabinete de voces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#E9E9E2;
+  --papel-alto:#F2F2EC;
+  --tinta:#1B2432;
+  --tinta-suave:#3E4A5C;
+  --grafito:#767C86;
+  --pauta:#BCBBB1;
+  --lapiz:#B8352C;
+  --azul:#2E5C8A;
+  --verde:#4A6F52;
+  --sombra:0 1px 0 rgba(27,36,50,.06), 0 8px 24px -14px rgba(27,36,50,.32);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:'Spectral',Georgia,serif;
+  font-size:16.5px;
+  line-height:1.62;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.wrap{max-width:640px;margin:0 auto;padding:26px 20px 96px}
+
+/* ---------- tipografía ---------- */
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:400;margin:0;line-height:1.14;letter-spacing:-.012em}
+h1{font-size:2.15rem}
+h2{font-size:1.6rem}
+h3{font-size:1.18rem}
+p{margin:0 0 .95em}
+em{font-style:italic}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+
+.rotulo{
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.19em;
+  text-transform:uppercase;color:var(--grafito);margin:0 0 12px;display:block;font-weight:500
+}
+.pie{
+  font-size:.86rem;line-height:1.5;color:var(--grafito);
+  border-left:2px solid var(--pauta);padding:2px 0 2px 13px;margin:22px 0 0
+}
+.pie strong{color:var(--tinta-suave);font-weight:600}
+.lead{font-size:1.06rem;color:var(--tinta-suave)}
+.centro{text-align:center}
+
+/* ---------- reglas / pentagrama decorativo ---------- */
+.pauta-sep{height:13px;margin:26px 0;background-image:repeating-linear-gradient(to bottom,var(--pauta) 0 1px,transparent 1px 4px);opacity:.75}
+
+/* ---------- botones ---------- */
+.btn{
+  display:block;width:100%;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.13em;text-transform:uppercase;
+  padding:16px 18px;border-radius:2px;background:var(--tinta);color:var(--papel-alto);
+  transition:background .18s ease, transform .12s ease;font-weight:500
+}
+.btn:hover{background:#2b3849}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{background:var(--pauta);color:#8b8a80;cursor:not-allowed}
+.btn.fantasma{background:transparent;color:var(--tinta-suave);border:1px solid var(--pauta)}
+.btn.fantasma:hover{background:rgba(27,36,50,.045)}
+.btn.rojo{background:var(--lapiz)}
+.btn.rojo:hover{background:#9c2b23}
+.btn+.btn{margin-top:9px}
+.btn-fila{display:flex;gap:9px}
+.btn-fila .btn{margin-top:0}
+:focus-visible{outline:2px solid var(--azul);outline-offset:3px}
+
+/* ---------- gabinete ---------- */
+.gab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:20px}
+@media(min-width:620px){.gab-grid{grid-template-columns:repeat(3,1fr);gap:14px}}
+.gab-card{
+  background:var(--papel-alto);border:1px solid var(--pauta);border-radius:2px;
+  padding:15px 13px 13px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  display:flex;flex-direction:column;gap:9px;min-height:172px
+}
+.gab-card:hover{border-color:var(--tinta-suave);box-shadow:var(--sombra);transform:translateY(-2px)}
+.gab-card .nom{display:block;font-family:'Fraunces',serif;font-size:1.2rem;line-height:1.05}
+.gab-card .obs{display:block;font-size:.79rem;line-height:1.42;color:var(--grafito);font-style:italic;flex:1}
+.gab-card.elegida{border-color:var(--tinta);border-width:2px;padding:14px 12px 12px}
+
+/* ---------- pentagrama de ejes ---------- */
+.staff{width:100%;display:block}
+.staff .linea{stroke:var(--pauta);stroke-width:1}
+.staff .cabeza{fill:var(--tinta)}
+.staff .cabeza-hueca{fill:none;stroke:var(--tinta);stroke-width:1.6}
+.staff .silencio{fill:var(--lapiz)}
+.staff .et{font-family:'IBM Plex Mono',monospace;font-size:7.4px;letter-spacing:.09em;fill:var(--grafito);text-transform:uppercase}
+.staff .et-cero{fill:var(--lapiz)}
+
+/* ---------- ficha ---------- */
+.ficha-cab{border-bottom:1px solid var(--pauta);padding-bottom:16px;margin-bottom:18px}
+.ficha-cab h2{margin-bottom:6px}
+.ficha-cab .sub{font-style:italic;color:var(--grafito);font-size:.95rem}
+.bloque{margin:22px 0}
+.bloque .rotulo{margin-bottom:7px}
+.bloque.desafina{background:rgba(184,53,44,.055);border-left:2px solid var(--lapiz);padding:14px 15px;margin-left:-2px}
+.bloque.desafina .rotulo{color:var(--lapiz)}
+.afina-lista{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.chip{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  border:1px solid var(--pauta);border-radius:999px;padding:5px 11px;color:var(--tinta-suave);background:var(--papel-alto)
+}
+
+/* ---------- código ---------- */
+.codigo-grande{
+  font-family:'IBM Plex Mono',monospace;font-size:3.7rem;letter-spacing:.09em;
+  font-weight:500;line-height:1;margin:6px 0 10px
+}
+
+/* ---------- entradas ---------- */
+.tam-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:14px 0 6px}
+.tam-btn{
+  font-family:'IBM Plex Mono',monospace;font-size:1.15rem;padding:14px 0;border:1px solid var(--pauta);
+  background:var(--papel-alto);color:var(--tinta);border-radius:2px;cursor:pointer;transition:all .15s ease
+}
+.tam-btn:hover{border-color:var(--tinta-suave)}
+.tam-btn.on{background:var(--tinta);color:var(--papel-alto);border-color:var(--tinta)}
+.cod-lista{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.cod-fila{display:flex;align-items:center;gap:11px}
+.cod-fila .num{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--grafito);width:16px;flex-shrink:0}
+.cod-input{
+  flex:1;font-family:'IBM Plex Mono',monospace;font-size:1.15rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:12px 14px;border:1px solid var(--pauta);background:var(--papel-alto);color:var(--tinta);border-radius:2px;width:100%
+}
+.cod-input:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 2px rgba(46,92,138,.15)}
+.cod-input.fija{background:transparent;border-style:dashed;color:var(--tinta-suave)}
+.cod-input.mala{border-color:var(--lapiz);box-shadow:0 0 0 2px rgba(184,53,44,.14)}
+.cod-fila .voz{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--grafito);width:66px;flex-shrink:0;text-align:right}
+.aviso{font-size:.84rem;color:var(--lapiz);margin:10px 0 0;min-height:1.2em}
+
+/* ---------- retrato ---------- */
+.retrato{font-size:1.09rem;line-height:1.66}
+.retrato .destacado{font-family:'Fraunces',serif;font-size:1.34rem;line-height:1.3;margin-bottom:14px;display:block}
+.aviso-regla{
+  border:1px solid var(--tinta);padding:19px 18px;margin:26px 0 0;background:var(--papel-alto)
+}
+.aviso-regla .rotulo{color:var(--tinta)}
+.aviso-regla p{margin-bottom:.5em;font-size:.97rem}
+.aviso-regla p:last-child{margin-bottom:0}
+
+/* ---------- pieza ---------- */
+.pieza-cab{margin-bottom:18px}
+.situacion{
+  background:var(--papel-alto);border:1px solid var(--pauta);border-left:3px solid var(--tinta);
+  padding:17px 17px;font-size:.98rem;line-height:1.6;margin:16px 0 26px
+}
+.compas{
+  border:1px solid var(--pauta);background:var(--papel-alto);border-radius:2px;
+  padding:14px 15px;margin-bottom:10px;cursor:pointer;transition:border-color .16s ease, box-shadow .16s ease;
+  display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%;font-family:inherit;color:inherit;font-size:inherit
+}
+.compas:hover{border-color:var(--tinta-suave)}
+.compas .cifra{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.13em;color:var(--grafito);padding-top:4px;flex-shrink:0;width:30px}
+.compas .cuerpo{flex:1}
+.compas .tarea{display:block;font-size:.97rem;line-height:1.48;margin-bottom:9px}
+.compas .casilla{
+  display:inline-flex;align-items:center;gap:8px;border:1px dashed var(--pauta);border-radius:999px;
+  padding:5px 13px;font-family:'IBM Plex Mono',monospace;font-size:.73rem;color:var(--grafito);letter-spacing:.06em
+}
+.compas.lleno{border-color:var(--tinta-suave)}
+.compas.lleno .casilla{border-style:solid;border-color:var(--tinta);background:var(--tinta);color:var(--papel-alto)}
+.pool{margin-top:26px;border-top:1px solid var(--pauta);padding-top:18px}
+.pool-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.tarjeta{
+  border:1px solid var(--pauta);background:var(--papel-alto);border-radius:2px;padding:9px 13px;
+  font-family:'IBM Plex Mono',monospace;font-size:.76rem;letter-spacing:.05em;color:var(--tinta);
+  display:flex;flex-direction:column;gap:2px;line-height:1.3;min-width:88px
+}
+.tarjeta .v{display:block;font-size:.66rem;color:var(--grafito);letter-spacing:.1em;text-transform:uppercase}
+.tarjeta.usada{opacity:.32}
+.tarjeta.atril{border-style:dashed;border-color:var(--lapiz)}
+.tarjeta.atril .v{color:var(--lapiz)}
+.contador{font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--grafito);letter-spacing:.08em;margin-top:16px}
+
+/* ---------- hoja inferior ---------- */
+.velo{position:fixed;inset:0;background:rgba(27,36,50,.44);z-index:40;opacity:0;pointer-events:none;transition:opacity .22s ease}
+.velo.on{opacity:1;pointer-events:auto}
+.hoja{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--papel);
+  border-top:2px solid var(--tinta);border-radius:6px 6px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(102%);transition:transform .28s cubic-bezier(.32,.72,.3,1);max-height:82vh;overflow-y:auto;
+  max-width:640px;margin:0 auto
+}
+.hoja.on{transform:translateY(0)}
+.hoja h3{margin-bottom:5px}
+.hoja .tarea-eco{font-size:.92rem;color:var(--grafito);font-style:italic;margin-bottom:16px}
+.op{
+  display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;
+  border:1px solid var(--pauta);background:var(--papel-alto);border-radius:2px;padding:13px 15px;margin-bottom:8px;
+  cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.85rem;letter-spacing:.06em;color:var(--tinta)
+}
+.op:hover{border-color:var(--tinta-suave)}
+.op .vz{font-size:.68rem;color:var(--grafito);text-transform:uppercase;letter-spacing:.1em}
+.op.bloq{border-style:dashed;border-color:var(--lapiz);color:var(--lapiz)}
+
+/* ---------- resultados ---------- */
+.res{border-left:3px solid var(--pauta);padding:2px 0 2px 15px;margin-bottom:24px}
+.res .enc{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px;flex-wrap:wrap}
+.res .cf{font-family:'IBM Plex Mono',monospace;font-size:.67rem;letter-spacing:.13em;color:var(--grafito)}
+.res .estado{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.res .quien{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--grafito);margin-bottom:8px;letter-spacing:.05em}
+.res .cons{font-size:.96rem;line-height:1.56;margin:0}
+.res.afinado{border-color:var(--azul)}
+.res.afinado .estado{color:var(--azul)}
+.res.casi{border-color:var(--grafito)}
+.res.casi .estado{color:var(--grafito)}
+.res.noentro{border-color:var(--lapiz);border-left-style:dashed}
+.res.noentro .estado{color:var(--lapiz)}
+.res.silencio{border-color:var(--lapiz)}
+.res.silencio .estado{color:var(--lapiz)}
+
+/* ---------- final ---------- */
+.capa{margin:30px 0}
+.capa h3{margin-bottom:10px;font-size:1.3rem}
+.capa .cuerpo{font-size:1.02rem;line-height:1.64}
+.capa .cuerpo p:last-child{margin-bottom:0}
+.marca{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.06em;color:var(--grafito);
+  border-top:1px solid var(--pauta);padding-top:9px;margin-top:12px;line-height:1.7
+}
+.cierre-pregunta{
+  min-height:62vh;display:flex;flex-direction:column;justify-content:center;text-align:center
+}
+.cierre-pregunta .q{font-family:'Fraunces',serif;font-size:1.72rem;line-height:1.28;margin:22px 0}
+
+/* ---------- convenciones y lectura ---------- */
+.eje-cab{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ayuda{
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--pauta);border-radius:999px;padding:5px 11px;
+  color:var(--tinta-suave);cursor:pointer;flex-shrink:0;transition:all .15s ease
+}
+.ayuda:hover{border-color:var(--tinta);background:var(--papel-alto)}
+.glf{width:26px;height:16px;display:block}
+.conv{border-top:1px solid var(--pauta);margin-top:8px}
+.conv-fila{display:flex;gap:13px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--pauta)}
+.conv-g{flex-shrink:0;width:64px;padding-top:2px}
+.conv-g.ejenom{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta);padding-top:3px}
+.conv-t{font-size:.88rem;line-height:1.48;color:var(--tinta-suave)}
+.conv-t strong{display:block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--tinta);font-weight:500;margin-bottom:2px}
+.lectura{border-top:1px solid var(--pauta);margin-top:10px}
+.lect{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--pauta)}
+.lect-g{flex-shrink:0;width:28px;padding-top:3px}
+.lect-c{flex:1}
+.lect-e{display:flex;justify-content:space-between;align-items:baseline;gap:9px;
+  font-family:'IBM Plex Mono',monospace;font-size:.71rem;letter-spacing:.11em;text-transform:uppercase;color:var(--tinta)}
+.lect-e b{font-weight:400;color:var(--grafito);letter-spacing:.06em;text-align:right;flex-shrink:0}
+.lect-d{display:block;font-size:.87rem;line-height:1.45;color:var(--tinta-suave);margin-top:3px}
+.lect.cero .lect-e{color:var(--lapiz)}
+.lect.cero .lect-e b{color:var(--lapiz)}
+
+/* ---------- reinicio ---------- */
+.reinicio{
+  position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;
+  background:var(--papel-alto);border:1px solid var(--pauta);border-radius:999px;padding:8px 14px;
+  color:var(--grafito);cursor:pointer;box-shadow:var(--sombra);transition:all .15s ease
+}
+.reinicio:hover{color:var(--lapiz);border-color:var(--lapiz)}
+
+/* ---------- misc ---------- */
+.oculto{display:none!important}
+.aparece{animation:sube .42s cubic-bezier(.22,.68,.3,1) both}
+@keyframes sube{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.tarde{animation:fade .8s ease .9s both}
+.tarde2{animation:fade .8s ease 2.1s both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<button class="reinicio" onclick="pedirReinicio()">Reiniciar</button>
+<div class="velo" id="velo" onclick="cerrarHoja()"></div>
+<div class="hoja" id="hoja"></div>
+<script>
+/* ============ VOCES ============ */
+const EJES = ['tesitura','agilidad','escucha','proyeccion','fundamento']; // de arriba a abajo en el pentagrama
+const EJE_NOM = {fundamento:'Fundamento',proyeccion:'Proyección',escucha:'Escucha',agilidad:'Agilidad',tesitura:'Tesitura'};
+
+const VOCES = {
+ bajo:{n:'Bajo',l:'B',sub:'La voz que nadie aplaude y que todos extrañan cuando falta.',
+  obs:'Que no se rompa lo que ya funciona.',
+  lidera:'Dando piso. Su equipo sabe exactamente qué no va a cambiar mañana, y eso libera una cantidad de energía que nadie contabiliza. En una crisis la gente lo busca porque su voz no tiembla, y no por valiente: por lenta. Delega tarde y revisa dos veces. Cuando dice que algo está listo, está listo. Su gente rara vez se siente inspirada y casi nunca se siente en riesgo.',
+  ejes:{fundamento:3,proyeccion:1,escucha:2,agilidad:0,tesitura:2},
+  cero:'agilidad',
+  desafina:'No puede cambiar de línea. Cuando la partitura se rompe a mitad de la obra, el bajo sigue en la nota que le tocaba. Confunde estabilidad con inmovilidad y se entera meses después, cuando ya es historia.',
+  pl:'bajos',
+  falta:'Nadie preguntó qué se rompía. Este coro decidió sin saber qué había debajo de lo que estaba moviendo.',
+  afina:['Mezzo','Tenor'],
+  afinaTxt:'Mezzo cubre el hueco que aparezca sin preguntar de quién era. Tenor empuja el primer movimiento. Un coro de puros bajos es un edificio muy sólido que nadie usa.'},
+
+ baritono:{n:'Barítono',l:'R',sub:'La voz del medio, que traduce.',
+  obs:'Que lo dicho arriba llegue abajo sin deformarse.',
+  lidera:'Traduciendo. Toma la decisión estratégica y la convierte en algo que un equipo pueda hacer el lunes. Se mueve entre pisos: desayuna con la vicepresidencia, almuerza con la operación, y en ambas mesas habla el idioma de la mesa. Su equipo nunca recibe una instrucción que no entienda. Es el primero al que llaman cuando dos áreas dejaron de hablarse.',
+  ejes:{fundamento:2,proyeccion:1,escucha:0,agilidad:2,tesitura:3},
+  cero:'escucha',
+  desafina:'Traduce tan bien que deja de oír. Convierte todo lo que llega en algo procesable, incluida la queja que no era procesable, incluido el silencio que significaba otra cosa. La disonancia le pasa por encima transformada en tarea.',
+  pl:'barítonos',
+  falta:'Lo que este coro decidió salió en un solo idioma, y llegó completo a quien ya lo hablaba.',
+  afina:['Contralto','Soprano'],
+  afinaTxt:'Contralto oye exactamente lo que él filtra sin darse cuenta. Soprano define hacia dónde traducir. Un coro de puros barítonos ejecuta impecablemente la instrucción equivocada.'},
+
+ tenor:{n:'Tenor',l:'T',sub:'La voz que entra primero.',
+  obs:'Que alguien dé el primer paso.',
+  lidera:'Exponiéndose. Toma la posición antes de que sea segura, y esa exposición le da permiso al resto para moverse. Cuando el equipo está paralizado, el tenor rompe la parálisis con el cuerpo. Pide perdón más que permiso. Arrastra a gente que no sabía que estaba dispuesta a moverse. Su equipo avanza rápido y llega cansado.',
+  ejes:{fundamento:1,proyeccion:3,escucha:0,agilidad:2,tesitura:2},
+  cero:'escucha',
+  desafina:'Canta encima de los demás. No por competir: su volumen tapa. Sale de las reuniones convencido de que hubo acuerdo, y lo que hubo fue silencio. El costo de su ímpetu lo pagan personas que él nunca escuchó decir que no.',
+  pl:'tenores',
+  falta:'Nadie rompió la parálisis. Este coro esperó a estar seguro, y la seguridad llegó después que el problema.',
+  afina:['Contralto','Bajo'],
+  afinaTxt:'Contralto le dice lo que se calló mientras él hablaba. Bajo le pone piso a la carrera. Un coro de puros tenores es una habitación donde todos hablan y nadie tiene idea de qué está pasando.'},
+
+ contralto:{n:'Contralto',l:'C',sub:'La voz grave que no se anuncia.',
+  obs:'Lo que se está callando en esta reunión.',
+  lidera:'Oyendo. Su equipo descubre que puede decir cosas que no diría en otra parte, y eso cambia la clase de información que le llega. Detecta el problema seis meses antes de que aparezca en un indicador. Hace pocas preguntas y las hace en el momento exacto. La gente sale de sus reuniones con la sensación de haber sido leída, que es distinta de haber sido escuchada.',
+  ejes:{fundamento:2,proyeccion:0,escucha:3,agilidad:1,tesitura:2},
+  cero:'proyeccion',
+  desafina:'Tiene razón en privado. Vio venir la crisis, lo dijo en el pasillo, se lo comentó a dos personas, no lo puso en la mesa. Su lucidez muere en el lugar donde la formuló, y después de la crisis alguien dice que ya se sabía.',
+  pl:'contraltos',
+  falta:'Nadie oyó la sala. Lo que no se dijo en voz alta no existió para este coro, y casi siempre había algo.',
+  afina:['Tenor','Soprano','Mezzo'],
+  afinaTxt:'Tenor y Soprano llevan su hallazgo a donde se decide. Mezzo convierte lo que oyó en un movimiento. Un coro de puras contraltos sabe todo lo que va a pasar y no evita nada.'},
+
+ mezzo:{n:'Mezzo',l:'Z',sub:'La voz que se acomoda.',
+  obs:'Que el hueco se cubra, sea cual sea el hueco.',
+  lidera:'Cubriendo. Cuando el plan se rompe, ya está haciendo otra cosa. Su equipo no colapsa nunca, porque el mezzo absorbe el impacto con el cuerpo antes de que llegue a los demás. Aprende oficios nuevos en fines de semana. Es el primero en llegar a la sala del incidente y el último en irse, y en la reunión del lunes nadie menciona su nombre.',
+  ejes:{fundamento:1,proyeccion:2,escucha:2,agilidad:3,tesitura:0},
+  cero:'tesitura',
+  desafina:'Cubre todo y no ocupa nada. Al cabo de dos años nadie sabe decir qué hace exactamente. Cuando llega el momento de asignarle un lugar propio no hay lugar: hay una lista de emergencias que atendió. Su versatilidad se paga con ausencia de registro.',
+  pl:'mezzos',
+  falta:'Cuando la partitura se rompió, este coro siguió en la nota que le tocaba. Nadie cubrió el hueco que se abrió.',
+  afina:['Bajo','Soprano','Contralto'],
+  afinaTxt:'Cualquiera que tenga posición fija. Alguien tiene que sostener una línea para que el mezzo tenga desde dónde moverse. Un coro de puros mezzos resuelve todas las urgencias y no construye nada.'},
+
+ soprano:{n:'Soprano',l:'S',sub:'La voz que llega arriba.',
+  obs:'Que exista un lugar al cual ir.',
+  lidera:'Dando dirección. Su equipo puede repetir en una frase lo que están haciendo y por qué, y eso los sostiene en semanas donde nada funciona. Convierte una intención vaga en algo que se puede desear. Habla en futuro con una naturalidad que a algunos les incomoda. Atrae gente buena y la pierde cuando el destino tarda demasiado en volverse camino.',
+  ejes:{fundamento:0,proyeccion:3,escucha:1,agilidad:2,tesitura:2},
+  cero:'fundamento',
+  desafina:'No sabe qué sostiene el piso donde está parada. Propone la migración sin conocer el sistema que va a migrar, anuncia el rumbo sin saber qué cuesta desmontar lo anterior. Su visión es correcta y flota; cuando toca aterrizarla, alguien más descubre que no había cómo.',
+  pl:'sopranos',
+  falta:'Nadie nombró el destino. Este coro resolvió compases sin que existiera un lugar al cual ir.',
+  afina:['Bajo','Barítono'],
+  afinaTxt:'Bajo le dice qué se rompe si avanza. Barítono convierte su rumbo en algo ejecutable. Un coro de puras sopranos tiene una dirección espléndida y ningún camino.'}
+};
+const ORDEN_VOCES = ['bajo','baritono','tenor','contralto','mezzo','soprano'];
+const POR_LETRA = {}; ORDEN_VOCES.forEach(k=>POR_LETRA[VOCES[k].l]=k);
+
+/* ============ PIEZAS ============ */
+const c=(t,a,cs,e,ok,mid,no)=>({t,a,c:cs,e,ok,mid,no});
+
+const AMBITOS = [
+{id:'cartera',nombre:'Cartera vencida',titulo:'Todos al mismo tiempo',ejeD:'fundamento',ejeS:'escucha',
+ sit:'Trescientos cuarenta créditos de vehículo de carga, otorgados entre 2022 y 2024, todos al mismo sector: transporte intermunicipal de mercancía seca. La mora pasó de cuatro por ciento a diecinueve en cinco meses. Ninguno de los trescientos cuarenta tiene un historial malo. Fallaron todos juntos, y eso no es un problema de comportamiento de pago.',
+ v:{
+ 3:[
+  c('Entender por qué falla un sector entero al mismo tiempo.','contralto','bajo','escucha',
+   'Alguien llama a doce deudores y no pregunta por la cuota. Pregunta por la ruta. Aparece lo mismo doce veces: un peaje nuevo en el corredor del Magdalena que le agregó nueve horas y un tanqueo al viaje.',
+   'Se cruzan los créditos con la base de matrículas y se confirma que el noventa por ciento opera el mismo corredor. La causa queda acotada, no explicada.',
+   'Se trata cada caso por separado. Trescientas cuarenta gestiones de cobranza individuales sobre un problema que no era individual.'),
+  c('Decidir qué se hace con las garantías y con la política de provisión.','bajo','baritono','fundamento',
+   'Se reestructura con período de gracia atado al flujo real de la ruta, sin tocar la calificación del sector completo. La provisión sube este trimestre y no arrastra a los otros ochocientos créditos de transporte que sí están sanos.',
+   'Se reestructura en bloque con las mismas condiciones para los trescientos cuarenta. Funciona para la mayoría. Ciento diez quedan con una cuota que tampoco pueden pagar.',
+   'Se ejecutan las garantías. Aparecen doscientos tractocamiones en un mercado que no absorbe doscientos tractocamiones, y el remate deja una pérdida mayor que la mora.'),
+  c('Sostener la decisión ante un comité de riesgo que ve un sector en rojo.','tenor','soprano','proyeccion',
+   'Se presenta el martes con lo que hay, se pide la excepción, se acepta que el indicador del trimestre va a verse mal. La reestructuración arranca en once días.',
+   'Se presenta dentro de una propuesta de política sectorial. El comité aprueba el marco y pide un piloto. El piloto empieza en seis semanas.',
+   'Nadie lleva el tema al comité con la fuerza suficiente. La cartera sigue su curso normal y en el reporte anual el sector transporte aparece como decisión de originación fallida.')],
+ 4:[
+  c('Entender por qué falla un sector entero al mismo tiempo.','contralto','mezzo','escucha',
+   'Doce llamadas y una pregunta que no era sobre la cuota. El peaje del Magdalena aparece doce veces.',
+   'El cruce con matrículas confirma el corredor común. Falta saber qué pasó en ese corredor.',
+   'Trescientas cuarenta gestiones individuales sobre una causa compartida.'),
+  c('Establecer qué se rompe si se reestructura el sector completo.','bajo','contralto','fundamento',
+   'Se identifica que la reestructuración masiva dispara una recalificación automática de todo el portafolio de transporte. Se aísla el subsegmento antes de mover nada.',
+   'Se detecta el riesgo de contagio a mitad del proceso y se corrige. Dos semanas de retroceso.',
+   'Se reestructura y ochocientos créditos sanos amanecen recalificados. La provisión del trimestre se triplica.'),
+  c('Bajar la nueva condición a doscientas oficinas y a la fuerza de cobranza.','baritono','bajo','tesitura',
+   'La oficina recibe un criterio de tres líneas y un ejemplo. El call center recibe un libreto distinto, con las palabras que sí puede decir. Nadie improvisa.',
+   'Sale una circular correcta y completa de once páginas. Las oficinas grandes la aplican bien. Las pequeñas llaman a preguntar durante un mes.',
+   'Cada regional interpreta a su manera. Tres deudores reciben tres ofertas distintas y una de ellas circula por WhatsApp entre transportadores.'),
+  c('Sostener la decisión ante el comité de riesgo.','soprano','tenor','proyeccion',
+   'Se nombra el destino antes que el problema: este sector va a existir en tres años y el banco quiere estar adentro. El comité aprueba con el indicador en rojo.',
+   'Se presenta el análisis completo, sin destino. El comité aprueba el análisis y pide volver con una propuesta.',
+   'El tema no llega. La cartera sigue su curso.')],
+ 5:[
+  c('Entender por qué falla un sector entero al mismo tiempo.','contralto','bajo','escucha',
+   'Doce llamadas, una pregunta sobre la ruta y no sobre la cuota. El peaje del Magdalena, nueve horas más, un tanqueo adicional por viaje.',
+   'El cruce de datos confirma el corredor común y deja la causa a medio camino.',
+   'Trescientas cuarenta gestiones individuales sobre una causa compartida.'),
+  c('Establecer qué se rompe si se reestructura el sector completo.','bajo','baritono','fundamento',
+   'Se aísla el subsegmento antes de tocarlo. Los ochocientos créditos sanos de transporte no se recalifican.',
+   'El contagio se detecta a mitad de camino y se corrige con dos semanas de atraso.',
+   'La provisión del trimestre se triplica por arrastre.'),
+  c('Un deudor con veintidós vehículos entra en cesación antes de que la propuesta esté lista.','mezzo','tenor','agilidad',
+   'Se le aplica el acuerdo antes de que exista el acuerdo, con un anexo firmado el mismo viernes. Los veintidós vehículos siguen operando y el caso se vuelve el ejemplo de la circular.',
+   'Se congela la gestión de cobro sobre ese deudor y se le pide esperar. Espera. Pierde dos contratos en la espera.',
+   'Se aplica el procedimiento estándar. Los veintidós vehículos quedan inmovilizados y la noticia llega al gremio antes que al comité.'),
+  c('Bajar la nueva condición a doscientas oficinas y a la fuerza de cobranza.','baritono','contralto','tesitura',
+   'Criterio de tres líneas para la oficina, libreto distinto para el call center, ejemplo real para ambos. Una versión, dos traducciones.',
+   'Circular de once páginas, correcta. Las oficinas pequeñas llaman a preguntar durante un mes.',
+   'Tres ofertas distintas circulando por WhatsApp entre transportadores.'),
+  c('Sostener la decisión ante el comité de riesgo y ante la junta.','tenor','soprano','proyeccion',
+   'Se presenta el martes, se pide la excepción, se acepta el trimestre en rojo. Arranca en once días.',
+   'Se aprueba el marco, se pide un piloto. Seis semanas.',
+   'El sector transporte queda registrado como una decisión de originación fallida.')]}},
+
+{id:'mesa',nombre:'Mesa de dinero',titulo:'Cuarenta minutos',ejeD:'agilidad',ejeS:'proyeccion',
+ sit:'El dato de inflación sale a las 7:00 y llega ochenta puntos básicos por encima de lo que descontaba la curva. La mesa tiene una posición larga en TES de mediano plazo y una cobertura que vence hoy. El mercado abre a las 8:00. Hasta las 7:40 se puede mover sin pedirle permiso a nadie; después, cualquier movimiento excede el límite de la mesa y requiere comité.',
+ v:{
+ 3:[
+  c('Mover la posición antes de las 7:40 o no moverla.','mezzo','tenor','agilidad',
+   'Se reduce a la mitad en veintidós minutos, en tres tramos, sin mover la curva. La otra mitad queda cubierta con lo que se alcanzó a renovar.',
+   'Se cierra toda la posición de golpe a las 7:38. Se ejecuta. El precio del último tramo es peor y el mercado nota quién estaba vendiendo.',
+   'Se decide esperar la apertura para tener más información. A las 8:14 la información es el precio.'),
+  c('Pedir la excepción de límite para recomponer con el mercado abierto.','tenor','mezzo','proyeccion',
+   'Se llama al presidente del comité a las 7:50, sin presentación y sin correo previo. La excepción sale verbal a las 7:56 y por escrito a las 9:20.',
+   'Se convoca comité extraordinario. Se reúne a las 9:10. La excepción llega correcta y una hora tarde.',
+   'Nadie pide nada. La mesa opera el día entero dentro del límite, con la posición equivocada.'),
+  c('Establecer qué política se está tocando y qué precedente queda.','bajo','baritono','fundamento',
+   'Se documenta la excepción con su fundamento y su fecha de vencimiento el mismo día. Cuando auditoría pregunta en septiembre, la respuesta ya está escrita.',
+   'Se documenta a la semana siguiente, completo. El acta reconstruye lo que pasó con la memoria de tres personas.',
+   'Queda una excepción sin registro y un precedente que otros usan en octubre para algo que no se parece.')],
+ 4:[
+  c('Leer el dato antes de reaccionar al dato.','contralto','mezzo','escucha',
+   'Alguien abre el desagregado y ve que sesenta de los ochenta puntos vienen de un rubro estacional que se revierte en el corte siguiente. La sorpresa es menor de lo que parece.',
+   'Se revisa el desagregado y se confirma que el dato es sólido. El movimiento posterior se hace sobre información completa.',
+   'Se opera contra el titular. El rubro se revierte en octubre y la posición se recompone dos veces.'),
+  c('Mover la posición antes de las 7:40 o no moverla.','mezzo','baritono','agilidad',
+   'Reducción a la mitad en tres tramos, veintidós minutos, sin mover la curva.',
+   'Cierre total a las 7:38. Peor precio en el último tramo y una firma visible en el mercado.',
+   'Se espera la apertura. A las 8:14 la información es el precio.'),
+  c('Pedir la excepción de límite.','tenor','soprano','proyeccion',
+   'Llamada a las 7:50, excepción verbal a las 7:56.',
+   'Comité extraordinario a las 9:10. Correcto y tarde.',
+   'La mesa opera el día dentro del límite con la posición equivocada.'),
+  c('Dejar registro de la excepción y del precedente.','bajo','contralto','fundamento',
+   'Fundamento y fecha de vencimiento, escritos el mismo día.',
+   'Acta reconstruida a la semana con la memoria de tres personas.',
+   'Un precedente sin registro que alguien invoca en octubre para algo distinto.')],
+ 5:[
+  c('Mover la posición antes de las 7:40 o no moverla.','mezzo','tenor','agilidad',
+   'Mitad de la posición, tres tramos, veintidós minutos, sin mover la curva.',
+   'Cierre total a las 7:38, peor precio, firma visible.',
+   'A las 8:14 la información es el precio.'),
+  c('Leer qué hay realmente adentro del dato.','contralto','bajo','escucha',
+   'Sesenta de los ochenta puntos vienen de un rubro estacional reversible. La sorpresa es la mitad de lo que parece.',
+   'Se confirma que el dato es sólido y no se ve el componente estacional.',
+   'Se opera contra el titular y se recompone dos veces.'),
+  c('Pedir la excepción de límite.','tenor','soprano','proyeccion',
+   'Excepción verbal a las 7:56, escrita a las 9:20.',
+   'Comité extraordinario a las 9:10.',
+   'Nadie pide nada.'),
+  c('Registrar la excepción y acotar el precedente.','bajo','baritono','fundamento',
+   'Documentado el mismo día, con vencimiento explícito.',
+   'Acta a la semana siguiente.',
+   'Precedente sin registro, reutilizado en octubre.'),
+  c('Explicarle el movimiento a tesorería, a riesgo y a la fuerza comercial que vende TES a clientes.','baritono','soprano','tesitura',
+   'Tres versiones del mismo hecho, cada una con lo que esa área necesita hacer el lunes. La fuerza comercial sabe qué decirle a un cliente que llama asustado.',
+   'Un correo general y correcto. Comercial improvisa dos días.',
+   'La versión que circula adentro es que la mesa perdió plata. Tres clientes retiran mandato.')]}},
+
+{id:'core',nombre:'Migración del core',titulo:'Lo que sostiene el edificio',ejeD:'tesitura',ejeS:'fundamento',
+ sit:'El core de depósitos entró en producción en 1998. Treinta y un sistemas cuelgan de él, incluidos dos que nadie recuerda haber construido. La migración está aprobada, presupuestada y con proveedor contratado. El negocio no puede parar: cuatro millones de cuentas, nómina de medio país, un fin de semana de corte disponible en todo el año.',
+ v:{
+ 3:[
+  c('Fijar un lenguaje común entre el proveedor, tecnología, operaciones y el negocio.','baritono','soprano','tesitura',
+   'Aparece un glosario de once términos que significan lo mismo para todos. «Cuenta inactiva» deja de significar tres cosas distintas según quién lo diga.',
+   'Se define la arquitectura con precisión técnica. El negocio firma sin entender del todo qué firmó y lo descubre en la prueba de usuario.',
+   'Cada área trabaja con su vocabulario. En marzo se descubre que el proveedor construyó sobre una definición de saldo disponible que operaciones nunca usó.'),
+  c('Mapear qué depende del sistema viejo.','bajo','contralto','fundamento',
+   'Aparecen treinta y uno, más dos que no estaban en ningún inventario: un proceso de embargos judiciales y una interfaz con una fiduciaria. Ambos se incluyen antes de tocar nada.',
+   'Se mapean veintinueve. Los dos faltantes se descubren en la prueba integrada, con tiempo para reaccionar.',
+   'Se migra con el inventario oficial. El proceso de embargos deja de correr un martes y el banco se entera por un juzgado.'),
+  c('El fin de semana de corte.','mezzo','tenor','agilidad',
+   'A las 4 de la mañana del domingo falla la carga de un archivo y se levanta la ruta alterna en cuarenta minutos. El lunes nadie afuera se entera de nada.',
+   'Se decide revertir a tiempo, limpio, sin daño. Se pierde el fin de semana y el siguiente disponible es en once meses.',
+   'Se insiste con el plan original. El lunes hay cuatro millones de saldos que no cuadran y un call center que no puede explicar por qué.')],
+ 4:[
+  c('Fijar un lenguaje común entre proveedor, tecnología, operaciones y negocio.','baritono','tenor','tesitura',
+   'Glosario de once términos. «Cuenta inactiva» deja de significar tres cosas.',
+   'Arquitectura precisa, negocio firmando lo que no entiende del todo.',
+   'El proveedor construye sobre una definición que operaciones nunca usó.'),
+  c('Los tres que saben cómo funciona el sistema viejo se jubilan este año.','contralto','bajo','escucha',
+   'Alguien nota que la documentación existente describe el sistema de 2011 y no el actual. Se sientan con los tres antes de que se vayan, sin agenda, durante nueve semanas.',
+   'Se les pide documentar lo que saben. Documentan lo que recuerdan que se les pidió documentar.',
+   'Se van con una despedida y un reconocimiento. En agosto nadie sabe por qué el proceso nocturno corre en ese orden.'),
+  c('Mapear qué depende del sistema viejo.','bajo','baritono','fundamento',
+   'Treinta y uno más dos que no estaban en el inventario: embargos judiciales y una fiduciaria.',
+   'Veintinueve mapeados, dos descubiertos en prueba integrada.',
+   'El banco se entera del proceso de embargos por un juzgado.'),
+  c('El fin de semana de corte.','mezzo','soprano','agilidad',
+   'Falla una carga a las 4 a.m., ruta alterna en cuarenta minutos, el lunes nadie afuera se entera.',
+   'Reversión limpia. El siguiente fin de semana disponible es en once meses.',
+   'Cuatro millones de saldos sin cuadrar el lunes.')],
+ 5:[
+  c('Fijar un lenguaje común entre las cuatro partes.','baritono','contralto','tesitura',
+   'Once términos que significan lo mismo para todos.',
+   'Precisión técnica sin traducción al negocio.',
+   'Una definición de saldo disponible que nadie compartía.'),
+  c('Mapear qué depende del sistema viejo.','bajo','baritono','fundamento',
+   'Treinta y tres dependencias, dos de ellas fuera de todo inventario.',
+   'Veintinueve, con las dos faltantes apareciendo en prueba.',
+   'Un juzgado avisa antes que el sistema.'),
+  c('Los que saben cómo funciona el sistema viejo se están yendo.','contralto','mezzo','escucha',
+   'La documentación describe el sistema de 2011. Nueve semanas sentados con ellos, sin agenda.',
+   'Documentan lo que se les pidió documentar.',
+   'En agosto nadie sabe por qué el proceso nocturno corre en ese orden.'),
+  c('El presupuesto se agota en el mes ocho de doce y hay que sostenerlo ante la junta.','soprano','tenor','proyeccion',
+   'Se plantea qué banco existe al otro lado de la migración, con fecha y con cifra. La junta aprueba la ampliación sabiendo exactamente qué está comprando.',
+   'Se presenta el sobrecosto con su justificación técnica. La junta aprueba y pide informes mensuales.',
+   'Se recorta el alcance para caber en el presupuesto. Lo que se recorta es la migración de los dos sistemas que nadie recordaba.'),
+  c('El fin de semana de corte.','mezzo','tenor','agilidad',
+   'Ruta alterna a las 4:40 de la mañana del domingo.',
+   'Reversión limpia, once meses de espera.',
+   'Lunes con cuatro millones de saldos descuadrados.')]}},
+
+{id:'quejas',nombre:'Patrón de quejas',titulo:'Lo que dicen cuando cuelgan',ejeD:'escucha',ejeS:'fundamento',
+ sit:'El indicador de satisfacción del canal telefónico lleva once meses en verde. La semana pasada, tres asesores distintos de tres ciudades distintas comentaron, cada uno por su lado y sin darle importancia, que los clientes de un producto específico cuelgan antes de que termine la encuesta. Nadie lo reportó. Alguien lo mencionó en un almuerzo.',
+ v:{
+ 3:[
+  c('Decidir qué se hace con un comentario de almuerzo.','contralto','bajo','escucha',
+   'Alguien pide los audios completos, no los resúmenes. Aparece un patrón: la encuesta no mide la llamada, mide si el cliente tuvo paciencia para llegar al final. Los que cuelgan son los que más tenían que decir.',
+   'Se revisan los históricos del producto y algo no cuadra en las cifras de retención. Se abre una revisión formal. Tomará seis semanas.',
+   'El comentario queda en el almuerzo. El indicador sigue en verde y en el reporte del trimestre el canal telefónico es la buena noticia.'),
+  c('Llevarlo a un comité que lleva once meses celebrando el verde.','tenor','soprano','proyeccion',
+   'Se presenta el martes, sin esperar el estudio completo, y se pide autorización para intervenir antes del cierre de mes. Incomoda. Avanza.',
+   'Se presenta dentro de una propuesta amplia de rediseño del canal. El comité aprueba y le asigna cronograma anual.',
+   'El hallazgo circula por correo entre tres personas que están de acuerdo. En marzo aparece como queja ante la Superintendencia.'),
+  c('Intervenir el producto sin desarmar lo que ya funciona.','bajo','baritono','fundamento',
+   'Se identifica qué parte del flujo genera el abandono y qué depende de esa parte. El ajuste toca dos sistemas y ninguno de los otros ocho. Catorce días sin tumbar nada.',
+   'Se rediseña el flujo completo. Funciona. Se rompen dos integraciones que nadie sabía que existían.',
+   'Se interviene sin mapa. El abandono baja y los reclamos de un producto vecino suben treinta por ciento sin que nadie relacione las dos cosas hasta agosto.')],
+ 4:[
+  c('Decidir qué se hace con un comentario de almuerzo.','contralto','mezzo','escucha',
+   'Los audios completos, no los resúmenes. Los que cuelgan son los que más tenían que decir.',
+   'Revisión formal de históricos. Seis semanas.',
+   'El canal telefónico sigue siendo la buena noticia del trimestre.'),
+  c('Llevarlo a un comité que lleva once meses celebrando el verde.','tenor','soprano','proyeccion',
+   'Martes, sin estudio completo, con autorización pedida.',
+   'Aprobado como propuesta anual.',
+   'Marzo, Superintendencia.'),
+  c('Intervenir sin desarmar lo que funciona.','bajo','contralto','fundamento',
+   'Dos sistemas tocados, catorce días, nada tumbado.',
+   'Rediseño completo y dos integraciones rotas sobre la marcha.',
+   'Los reclamos del producto vecino suben treinta por ciento.'),
+  c('Que ochocientos asesores sepan qué cambió y por qué.','baritono','soprano','tesitura',
+   'El asesor recibe la razón del cambio, no solo el cambio. Empieza a reportar por su cuenta otras dos cosas que llevaba meses notando.',
+   'Sale una guía operativa impecable. Se cumple. Nadie reporta nada nuevo.',
+   'El flujo cambia sin aviso. Los asesores lo descubren en llamada, con el cliente adelante.')],
+ 5:[
+  c('Decidir qué se hace con un comentario de almuerzo.','contralto','bajo','escucha',
+   'Audios completos. Los que cuelgan son los que más tenían que decir.',
+   'Revisión formal, seis semanas.',
+   'El indicador sigue en verde.'),
+  c('Llevarlo a un comité que lleva once meses celebrando el verde.','tenor','mezzo','proyeccion',
+   'Martes, incompleto, autorizado.',
+   'Cronograma anual.',
+   'Superintendencia en marzo.'),
+  c('Intervenir sin desarmar lo que funciona.','bajo','baritono','fundamento',
+   'Dos sistemas, catorce días.',
+   'Dos integraciones rotas y reparadas.',
+   'El producto vecino paga la cuenta.'),
+  c('A mitad del ajuste, un medio publica el caso de una clienta.','mezzo','tenor','agilidad',
+   'La clienta tiene respuesta antes de que el artículo cumpla seis horas, y el ajuste ya estaba en curso, lo cual se puede demostrar con fechas. La nota se apaga sola.',
+   'Se responde bien y al día siguiente. Dos réplicas más y luego silencio.',
+   'Se responde con un comunicado sobre el compromiso con el cliente. La clienta lo cita en televisión.'),
+  c('Que ochocientos asesores sepan qué cambió y por qué.','baritono','contralto','tesitura',
+   'El asesor recibe la razón y empieza a reportar por su cuenta otras dos cosas.',
+   'Guía impecable, cumplimiento total, cero reportes nuevos.',
+   'Lo descubren en llamada, con el cliente adelante.')]}},
+
+{id:'brecha',nombre:'Brecha activa',titulo:'Cuarenta minutos de otra clase',ejeD:'agilidad',ejeS:'proyeccion',
+ sit:'3:40 de la madrugada. Un proveedor externo reporta actividad anómala en un servicio que expone datos de identificación de clientes de crédito de consumo. No hay confirmación de extracción. No hay confirmación de que no la haya. El servicio está activo y procesando. Apagarlo deja sin operar el canal digital de dos millones de personas cuando amanezca.',
+ v:{
+ 3:[
+  c('Decidir si se apaga.','mezzo','tenor','agilidad',
+   'Se aísla el servicio sin apagar el canal: tráfico desviado a una ruta degradada en once minutos. Los clientes verán lentitud. No verán una caída.',
+   'Se apaga. Es correcto y llega completo: el canal cae a las 3:52 y el equipo trabaja con un reloj público encima.',
+   'Se convoca a un comité que se reúne a las 5:10. El servicio operó ochenta minutos más.'),
+  c('Saber qué se llevaron, si se llevaron algo.','contralto','bajo','escucha',
+   'Alguien nota que los registros del proveedor y los propios no coinciden en la línea de tiempo. La discrepancia señala un segundo punto de entrada.',
+   'Se reconstruye desde los logs internos, completo hasta donde llega el registro, y el registro empieza el martes.',
+   'Se asume el alcance que reportó el proveedor. En abril aparece un segundo incidente que resulta ser el mismo, todavía abierto.'),
+  c('Decírselo al regulador y a la junta antes del amanecer.','soprano','tenor','proyeccion',
+   'Se notifica a las 6:15 con lo que hay: qué pasó, qué no se sabe todavía, qué se está haciendo. La incertidumbre se comunica como incertidumbre.',
+   'Se notifica a las 6:15 con un mensaje que suena más resuelto de lo que la situación permite. Nadie miente. A las once hay que corregir dos cosas.',
+   'Se espera el cuadro completo. La notificación sale a las 4 de la tarde y la conversación con el regulador ya no es sobre la brecha.')],
+ 4:[
+  c('Decidir si se apaga.','mezzo','baritono','agilidad',
+   'Aislamiento sin caída, once minutos, lentitud en lugar de apagón.',
+   'Se apaga a las 3:52 con reloj público.',
+   'Comité a las 5:10, ochenta minutos de operación adicional.'),
+  c('Saber qué se llevaron.','contralto','mezzo','escucha',
+   'La discrepancia entre registros señala un segundo punto de entrada.',
+   'Reconstrucción completa hasta el martes, que es donde empieza el registro.',
+   'El mismo incidente reaparece en abril, todavía abierto.'),
+  c('Notificar antes del amanecer.','soprano','tenor','proyeccion',
+   '6:15, con la incertidumbre comunicada como incertidumbre.',
+   '6:15, con dos correcciones a las once.',
+   '4 de la tarde, y la conversación ya es otra.'),
+  c('Restablecer sin reabrir lo que se cerró.','bajo','baritono','fundamento',
+   'Restablecimiento por capas, dependencias verificadas una a una, servicio arriba a las 9:40 sin arrastrar la vulnerabilidad.',
+   'Restablecimiento completo tras el parche. Tres días después aparece un servicio satélite con la configuración anterior.',
+   'Se reabre lo mismo que se cerró. El segundo incidente ocurre el viernes.')],
+ 5:[
+  c('Decidir si se apaga.','mezzo','tenor','agilidad',
+   'Once minutos, ruta degradada, lentitud en lugar de caída.',
+   'Apagón a las 3:52.',
+   'Comité a las 5:10.'),
+  c('Saber qué se llevaron.','contralto','bajo','escucha',
+   'Segundo punto de entrada, detectado por una discrepancia de minutos.',
+   'Registro completo desde el martes.',
+   'Abril.'),
+  c('Notificar al regulador y a la junta antes del amanecer.','soprano','tenor','proyeccion',
+   '6:15, incertidumbre nombrada.',
+   '6:15, dos correcciones a las once.',
+   '4 de la tarde.'),
+  c('Restablecer sin reabrir lo que se cerró.','bajo','baritono','fundamento',
+   'Por capas, 9:40, sin arrastre.',
+   'Un satélite con la configuración vieja, tres días después.',
+   'Viernes.'),
+  c('Adentro hay ochocientas personas que se enteraron por el chat.','baritono','contralto','tesitura',
+   'El relato le llega a cada área en su idioma: comercial sabe qué responderle a un cliente, riesgo sabe qué documentar, tecnología sabe qué se decidió y por qué. Una versión, seis traducciones.',
+   'Comunicado interno correcto y general. Comercial improvisa dos días.',
+   'La versión que circula es la del chat, y en la del chat sí hubo robo de datos.')]}},
+
+{id:'regulatorio',nombre:'Hallazgo regulatorio',titulo:'Lo que da plata',ejeD:'fundamento',ejeS:'proyeccion',
+ sit:'Auditoría interna encuentra que el seguro asociado a la tarjeta de crédito se activó, en un porcentaje no determinado de casos, con un consentimiento que no cumple lo que exige la norma vigente desde 2023. Ciento noventa mil clientes lo tienen. El producto aporta el catorce por ciento del margen del segmento. Nadie afuera lo ha notado.',
+ v:{
+ 3:[
+  c('Establecer de cuántos clientes se está hablando.','bajo','contralto','fundamento',
+   'Se rastrea la trazabilidad hasta el canal de venta y aparece el corte exacto: veintiséis mil casos, todos de un mismo flujo de venta telefónica entre marzo y noviembre de 2024. El resto está limpio.',
+   'Se determina que el problema existe y se acota a la venta telefónica. La cifra exacta llega en cinco semanas.',
+   'Se habla de «ciento noventa mil clientes potencialmente afectados». El número entra en un correo y de ahí a una presentación, y ya nadie lo baja.'),
+  c('Decirlo arriba, sabiendo que cuesta catorce por ciento del margen.','tenor','soprano','proyeccion',
+   'Se lleva al comité de auditoría con el número acotado y una propuesta de remediación. Se aprueba devolver antes de que nadie lo pida.',
+   'Se lleva al comité con el hallazgo y sin propuesta. Se abre una mesa de trabajo que sesiona seis veces.',
+   'El hallazgo queda en el informe de auditoría, con su calificación y su plan de acción a doce meses. En el mes nueve llega un requerimiento externo.'),
+  c('Desmontar el cobro sin romper lo que sí está bien vendido.','baritono','bajo','tesitura',
+   'Se desactiva el cobro solo para el flujo afectado, con una comunicación distinta para cada canal y un libreto para la oficina. Los otros ciento sesenta y cuatro mil no se enteran de nada.',
+   'Se desactiva para todos mientras se depura. Se recupera en dos meses. El margen del trimestre cae más de lo necesario.',
+   'Se desactiva sin distinguir y sin avisar. Cuarenta mil clientes que sí querían el seguro descubren que no lo tienen cuando lo necesitan.')],
+ 4:[
+  c('Establecer de cuántos clientes se está hablando.','bajo','baritono','fundamento',
+   'Veintiséis mil casos, un solo flujo, marzo a noviembre de 2024.',
+   'Acotado a venta telefónica, cifra exacta en cinco semanas.',
+   '«Ciento noventa mil potencialmente afectados» queda instalado en una presentación.'),
+  c('Los clientes que no sabían que lo tenían.','contralto','mezzo','escucha',
+   'Se escuchan cuarenta llamadas de la venta original. En treinta y una el cliente pregunta qué es eso que le están cobrando y la respuesta cambia de tema. Eso define la remediación mejor que la norma.',
+   'Se revisa la muestra estadística requerida y se confirma el incumplimiento formal.',
+   'Se remedia según lo que exige la norma. Once mil clientes reciben una devolución que no entienden y llaman a preguntar.'),
+  c('Decirlo arriba sabiendo lo que cuesta.','tenor','soprano','proyeccion',
+   'Comité de auditoría, número acotado, propuesta de devolución antes de que nadie la pida.',
+   'Hallazgo sin propuesta, mesa de trabajo con seis sesiones.',
+   'Plan de acción a doce meses y un requerimiento externo en el mes nueve.'),
+  c('Desmontar sin romper lo que sí está bien vendido.','baritono','contralto','tesitura',
+   'Solo el flujo afectado, un libreto por canal, ciento sesenta y cuatro mil clientes sin enterarse.',
+   'Desactivación total y recuperación en dos meses.',
+   'Cuarenta mil que sí querían el seguro se enteran cuando lo necesitan.')],
+ 5:[
+  c('Establecer de cuántos clientes se está hablando.','bajo','contralto','fundamento',
+   'Veintiséis mil, un flujo, nueve meses.',
+   'Acotado al canal, cifra en cinco semanas.',
+   'El número grande se instala solo.'),
+  c('Los clientes que no sabían que lo tenían.','contralto','bajo','escucha',
+   'Treinta y una de cuarenta llamadas: el cliente pregunta y la respuesta cambia de tema.',
+   'Muestra estadística, incumplimiento formal confirmado.',
+   'Once mil devoluciones que nadie entiende.'),
+  c('Decirlo arriba sabiendo lo que cuesta.','tenor','mezzo','proyeccion',
+   'Propuesta de devolución antes de que la pidan.',
+   'Mesa de trabajo, seis sesiones.',
+   'Requerimiento externo en el mes nueve.'),
+  c('El regulador se adelanta y pide información en cuarenta y ocho horas.','mezzo','baritono','agilidad',
+   'Se entrega en treinta y seis horas con lo que hay, incluida la parte que todavía no cuadra, señalada como tal. El regulador ve un banco que ya estaba trabajando.',
+   'Se pide prórroga y se entrega impecable el día ocho. Correcto y leído como demora.',
+   'Se entrega a las cuarenta y ocho horas un documento incompleto que no dice que está incompleto. La segunda pregunta es sobre eso.'),
+  c('Desmontar sin romper lo que sí está bien vendido.','baritono','soprano','tesitura',
+   'Un libreto por canal, el resto de clientes intacto.',
+   'Desactivación total, dos meses de recuperación.',
+   'Cuarenta mil clientes descubren la ausencia del seguro en el peor momento.')]}},
+
+{id:'duplicidad',nombre:'Dos áreas iguales',titulo:'El mismo modelo con dos nombres',ejeD:'escucha',ejeS:'tesitura',
+ sit:'La vicepresidencia de riesgo tiene un equipo de analítica de veintiocho personas. La vicepresidencia digital tiene uno de treinta y dos. Un proveedor menciona, de pasada, que le vendió la misma licencia dos veces al mismo banco. Al revisar, los dos equipos construyeron modelos de propensión sobre las mismas bases, con métricas distintas, y ninguno sabía del otro. Sesenta personas. Nadie hizo nada mal.',
+ v:{
+ 3:[
+  c('Entender por qué ninguno de los dos supo del otro durante dos años.','contralto','bajo','escucha',
+   'Aparecen dos conversaciones que sí ocurrieron, en 2023, y que terminaron sin decisión porque cada área entendió que la otra estaba haciendo algo distinto. El problema no fue el silencio, fue el vocabulario.',
+   'Se documenta la duplicidad con precisión: qué modelo, qué base, qué costo. La causa queda sin explicar.',
+   'Se asume que hubo falta de comunicación y se propone un comité de coordinación. El comité se crea y sesiona mensualmente durante un año.'),
+  c('Hacer que dos equipos que hablan distinto puedan trabajar juntos.','baritono','soprano','tesitura',
+   'Se define un catálogo único de variables y una sola definición de propensión. Los dos equipos siguen separados y por primera vez sus resultados se pueden comparar.',
+   'Se fusionan bajo una sola jefatura. Funciona en el organigrama. Los primeros cuatro meses se van en discutir qué métrica se queda.',
+   'Se pide colaboración y buena voluntad. Cada equipo colabora con su definición.'),
+  c('Contarle a la organización que sesenta personas hicieron lo mismo dos veces.','soprano','tenor','proyeccion',
+   'Se plantea hacia adelante, con una cifra de lo que se libera y una lista de tres cosas que nadie estaba haciendo y ahora sí. Nadie sale humillado y nadie sale ileso.',
+   'Se comunica el ahorro. Correcto, frío, y los sesenta lo leen como el anuncio de un recorte.',
+   'No se comunica nada. La versión que circula es que van a despedir a un equipo entero, y nueve personas renuncian antes de que se decida nada.')],
+ 4:[
+  c('Entender por qué ninguno supo del otro durante dos años.','contralto','mezzo','escucha',
+   'Dos conversaciones de 2023 que terminaron sin decisión por vocabulario, no por silencio.',
+   'Duplicidad documentada, causa sin explicar.',
+   'Un comité de coordinación que sesiona un año.'),
+  c('Establecer qué depende hoy de cada uno de los dos modelos.','bajo','baritono','fundamento',
+   'El modelo de riesgo alimenta la política de originación y el de digital alimenta cuatro campañas activas. Apagar cualquiera de los dos tiene un costo que ahora se conoce antes de decidir.',
+   'Se identifican las dependencias principales. Dos campañas menores se descubren después.',
+   'Se apaga uno de los dos por eficiencia. Tres semanas después nadie sabe por qué cayó la conversión de un canal.'),
+  c('Hacer que dos equipos que hablan distinto puedan trabajar juntos.','baritono','contralto','tesitura',
+   'Catálogo único de variables, una definición de propensión, dos equipos que por fin se pueden comparar.',
+   'Fusión bajo una jefatura y cuatro meses discutiendo métricas.',
+   'Cada equipo colabora con su definición.'),
+  c('Contarlo sin que sesenta personas se sientan sobrantes.','soprano','tenor','proyeccion',
+   'Hacia adelante, con cifra y con tres cosas nuevas que ahora sí se van a hacer.',
+   'Se comunica el ahorro y se lee como recorte.',
+   'Nueve renuncias antes de que se decida nada.')],
+ 5:[
+  c('Entender por qué ninguno supo del otro durante dos años.','contralto','bajo','escucha',
+   'El problema fue el vocabulario y no el silencio.',
+   'Duplicidad documentada sin causa.',
+   'Un comité mensual durante un año.'),
+  c('Establecer qué depende hoy de cada modelo.','bajo','contralto','fundamento',
+   'Política de originación de un lado, cuatro campañas activas del otro, costo conocido antes de decidir.',
+   'Dependencias principales mapeadas, dos campañas menores por fuera.',
+   'Cae la conversión de un canal y nadie sabe por qué.'),
+  c('Hacer que dos equipos que hablan distinto trabajen juntos.','baritono','soprano','tesitura',
+   'Catálogo único, resultados comparables por primera vez.',
+   'Fusión y cuatro meses de discusión metodológica.',
+   'Colaboración con definiciones incompatibles.'),
+  c('El líder de uno de los dos equipos renuncia y once personas hablan de seguirlo.','mezzo','tenor','agilidad',
+   'Se redistribuye el trabajo crítico en cuatro días y se habla con los once, uno por uno, antes del viernes. Se van dos.',
+   'Se abre un proceso de retención con contraofertas. Se quedan siete y la conversación sobre por qué se querían ir no ocurre.',
+   'Se procesa la renuncia y se abre la vacante. En seis semanas se han ido nueve y dos modelos quedan sin dueño.'),
+  c('Contarlo sin que sesenta personas se sientan sobrantes.','soprano','tenor','proyeccion',
+   'Con cifra, con destino, y nadie sale ileso.',
+   'El ahorro comunicado y leído como recorte.',
+   'La versión del pasillo gana.')]}},
+
+{id:'discontinuar',nombre:'Discontinuar un producto',titulo:'Lo que alguien construyó',ejeD:'proyeccion',ejeS:'fundamento',
+ sit:'La cuenta de ahorro programado para jóvenes tiene cuarenta mil clientes activos, un costo operativo que supera el ingreso en cada uno de los últimos siete trimestres, y un equipo de doce personas que la construyó desde cero hace cuatro años y la considera lo mejor que ha hecho. La decisión de cerrarla no está tomada. Está en la agenda del jueves.',
+ v:{
+ 3:[
+  c('Saber qué cuesta realmente, incluido lo que no está en el estado de resultados.','bajo','contralto','fundamento',
+   'Aparece que catorce mil de los cuarenta mil abrieron después un producto rentable, y que el costo se concentra en un proceso manual de conciliación que se puede automatizar. El producto no era el problema.',
+   'Se calcula el costo total con precisión, incluida la carga operativa oculta. La cifra es peor de lo que decía el reporte.',
+   'Se decide con el margen directo. Se cierra un producto que era la puerta de entrada de un segmento entero, y eso se descubre en la revisión de originación del año siguiente.'),
+  c('Sostener la decisión frente a quienes la construyeron.','soprano','tenor','proyeccion',
+   'Se dice el jueves, en persona, con la razón completa y sin adornarla. Se nombra qué sigue para las doce personas antes de que ellas pregunten.',
+   'Se comunica por el canal formal, con respeto y con los datos. Las doce personas se enteran el mismo día que los cuarenta mil clientes.',
+   'La decisión se filtra antes de anunciarse. El equipo se entera por un correo dirigido a otra área.'),
+  c('Oír lo que el equipo sabe y nadie preguntó.','contralto','mezzo','escucha',
+   'Alguien se sienta con las doce personas sin agenda. Sale de ahí con dos cosas que el producto resolvía y que ningún otro resuelve, y con el nombre de la clienta que hay que llamar primero.',
+   'Se hace una sesión de cierre estructurada, con lecciones aprendidas documentadas. Se documenta lo que se preguntó.',
+   'El equipo se disuelve con un reconocimiento. Dieciocho meses después, otra área construye algo muy parecido sin saber que ya existió.')],
+ 4:[
+  c('Saber qué cuesta realmente.','bajo','baritono','fundamento',
+   'Catorce mil migraron a un producto rentable, el costo está en una conciliación manual automatizable. El producto no era el problema.',
+   'Costo total calculado con precisión y peor de lo reportado.',
+   'Se cierra la puerta de entrada de un segmento entero.'),
+  c('Oír lo que el equipo sabe y nadie preguntó.','contralto','bajo','escucha',
+   'Dos cosas que el producto resolvía y ningún otro resuelve, más el nombre de la clienta que hay que llamar primero.',
+   'Sesión de cierre estructurada que documenta lo que se preguntó.',
+   'Otra área construye lo mismo dieciocho meses después.'),
+  c('Sostener la decisión frente a quienes la construyeron.','soprano','tenor','proyeccion',
+   'El jueves, en persona, con lo que sigue para las doce personas ya nombrado.',
+   'Canal formal, respeto, datos, y el equipo enterándose el mismo día que los clientes.',
+   'Se filtra antes de anunciarse.'),
+  c('Mover cuarenta mil clientes a otro lugar sin que se sienta como un abandono.','baritono','contralto','tesitura',
+   'El mensaje al cliente de veintidós años no se parece al que recibe el padre que abrió la cuenta a nombre del hijo. Dos versiones, un solo hecho, ninguna mentira.',
+   'Comunicación única, clara y bien escrita. Funciona para la mitad.',
+   'Sale una carta de migración estándar. Seis mil cuentas se cierran en lugar de migrar.')],
+ 5:[
+  c('Saber qué cuesta realmente.','bajo','contralto','fundamento',
+   'Catorce mil migraron a un producto rentable; el costo está en un proceso manual.',
+   'Cifra precisa y peor de lo esperado.',
+   'Se cierra la puerta de entrada de un segmento.'),
+  c('Oír lo que el equipo sabe y nadie preguntó.','contralto','mezzo','escucha',
+   'Dos funciones que ningún otro producto cubre, y un nombre propio para empezar.',
+   'Lecciones aprendidas de lo que se preguntó.',
+   'Reconstruido por otra área en dieciocho meses.'),
+  c('Sostener la decisión frente a quienes la construyeron.','soprano','tenor','proyeccion',
+   'En persona, el jueves, con el después ya nombrado.',
+   'Enterarse el mismo día que los clientes.',
+   'Un correo dirigido a otra área.'),
+  c('Dos de las doce personas renuncian el viernes y una de ellas sostiene el proceso de cierre.','mezzo','baritono','agilidad',
+   'El proceso de cierre queda cubierto por dos personas nuevas antes del lunes, y a las que se van se les pide una cosa concreta y acotada. Las dos la hacen.',
+   'Se contrata un tercero para operar el cierre. Funciona con dos semanas de curva.',
+   'Se acepta la renuncia y el cierre queda a cargo de quien pueda. La migración se atrasa siete semanas.'),
+  c('Mover cuarenta mil clientes sin que se sienta como un abandono.','baritono','soprano','tesitura',
+   'Dos versiones del mismo hecho, una para el joven y otra para el padre.',
+   'Una sola comunicación, clara, que funciona para la mitad.',
+   'Seis mil cuentas cerradas en lugar de migradas.')]}}
+];
+/* ============ ESTADO ============ */
+const S={miVoz:null,miCodigo:null,esAtril:false,n:0,coro:[],version:3,piezas:[],pIdx:0,asign:{},fueraPrev:[],hist:[],compasAbierto:null,borrador:[]};
+const app=document.getElementById('app'), hoja=document.getElementById('hoja'), velo=document.getElementById('velo');
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const pinta=h=>{app.innerHTML=h;window.scrollTo(0,0);};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+
+const EJE_DEF={
+ fundamento:'Sostener, estabilizar, recordar por qué las cosas son como son.',
+ proyeccion:'Ser oído afuera, exponerse, poner el cuerpo frente a otros.',
+ escucha:'Detectar lo que nadie dijo, oír la disonancia antes de que estalle.',
+ agilidad:'Cambiar de línea, improvisar, responder a lo imprevisto.',
+ tesitura:'Cuántos registros distintos puede cubrir una misma persona.'};
+const NIVEL={3:'Su línea principal',2:'Sostiene',1:'Apenas llega',0:'Pausa'};
+const NIVEL_G={3:'Aquí es donde esta voz suena más fuerte, y es lo primero que un equipo nota en ella.',
+ 2:'Lo hace bien cuando le toca. No es lo que la define.',
+ 1:'Llega si no hay otro remedio, y le cuesta.',
+ 0:'Fuera de su registro. No es un punto flojo: es un hueco.'};
+
+/* ============ PENTAGRAMA ============ */
+function staff(ejes,compacto){
+  const W=compacto?128:230, H=compacto?58:74;
+  const y0=compacto?7:9, dy=compacto?11:14;
+  const xL=compacto?11:52, xR=compacto?W-6:W-24, xN=compacto?(xL+xR)/2:150;
+  let s=`<svg class="staff" viewBox="0 0 ${W} ${H}" role="img" aria-hidden="true">`;
+  EJES.forEach((e,i)=>{
+    const y=y0+i*dy, v=ejes[e];
+    s+=`<line class="linea" x1="${xL}" y1="${y}" x2="${xR}" y2="${y}"/>`;
+    s+=compacto
+      ? `<text class="et ${v===0?'et-cero':''}" x="0" y="${y+2.6}">${EJE_NOM[e][0]}</text>`
+      : `<text class="et ${v===0?'et-cero':''}" x="0" y="${y+2.8}">${EJE_NOM[e]}</text>`;
+    if(v===0){
+      const w=compacto?9:11,h=compacto?4.2:5;
+      s+=`<rect class="silencio" x="${xN-w/2}" y="${y-h}" width="${w}" height="${h}"/>`;
+    }else{
+      const rx=compacto?4.6:5.4, ry=compacto?3.3:3.9;
+      if(v===3) s+=`<ellipse class="cabeza" cx="${xN}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(-18 ${xN} ${y})"/>`;
+      else if(v===2) s+=`<ellipse class="cabeza-hueca" cx="${xN}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(-18 ${xN} ${y})" stroke-width="2.2"/>`;
+      else s+=`<ellipse class="cabeza-hueca" cx="${xN}" cy="${y}" rx="${rx-1}" ry="${ry-.8}" transform="rotate(-18 ${xN} ${y})" stroke-width="1.1"/>`;
+    }
+    if(!compacto) s+=`<text class="et ${v===0?'et-cero':''}" x="${W-14}" y="${y+2.8}">${v===0?'—':v}</text>`;
+  });
+  return s+'</svg>';
+}
+
+function glifo(v){
+  const W=26,H=16,y=8,x=13;
+  let g='<svg class="staff glf" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">';
+  g+='<line class="linea" x1="1" y1="'+y+'" x2="'+(W-1)+'" y2="'+y+'"/>';
+  if(v===0) g+='<rect class="silencio" x="'+(x-5.5)+'" y="'+(y-5)+'" width="11" height="5"/>';
+  else if(v===3) g+='<ellipse class="cabeza" cx="'+x+'" cy="'+y+'" rx="5.4" ry="3.9" transform="rotate(-18 '+x+' '+y+')"/>';
+  else if(v===2) g+='<ellipse class="cabeza-hueca" cx="'+x+'" cy="'+y+'" rx="5.4" ry="3.9" stroke-width="2.2" transform="rotate(-18 '+x+' '+y+')"/>';
+  else g+='<ellipse class="cabeza-hueca" cx="'+x+'" cy="'+y+'" rx="4.4" ry="3.1" stroke-width="1.1" transform="rotate(-18 '+x+' '+y+')"/>';
+  return g+'</svg>';
+}
+
+function comoSeLee(k){
+  const v=k?VOCES[k]:null;
+  abrirHoja(`<h3>Cómo se lee esta partitura</h3>
+  <p class="tarea-eco">Cinco líneas, cinco ejes del liderazgo. Se lee como un pentagrama: Tesitura arriba, Fundamento abajo. Una nota por línea, y la forma de la nota dice cuánto pesa esa voz en ese eje.</p>
+  <span class="rotulo">Los cuatro símbolos</span>
+  <div class="conv">
+    ${[3,2,1,0].map(n=>`<div class="conv-fila"><span class="conv-g">${glifo(n)}</span>
+      <span class="conv-t"><strong>${NIVEL[n]}</strong>${NIVEL_G[n]}</span></div>`).join('')}
+  </div>
+  <span class="rotulo" style="margin-top:22px">Qué mide cada línea</span>
+  <div class="conv">
+    ${EJES.map(e=>`<div class="conv-fila"><span class="conv-g mono ejenom">${EJE_NOM[e]}</span>
+      <span class="conv-t">${EJE_DEF[e]}</span></div>`).join('')}
+  </div>
+  ${v?`<p class="pie" style="margin-top:20px">En ${v.n}, la pausa está en <strong>${EJE_NOM[v.cero]}</strong>.</p>`:''}
+  <button class="btn fantasma" style="margin-top:20px" onclick="cerrarHoja()">Cerrar</button>`);
+}
+
+/* ============ 0 · ENTRADA ============ */
+function entrada(){
+  pinta(`<div class="aparece">
+  <span class="rotulo">Taller de liderazgo</span>
+  <h1>El gabinete<br>de voces</h1>
+  <div class="pauta-sep"></div>
+  <p class="lead">Un coro no es un grupo de gente cantando lo mismo. Es un conjunto de registros distintos que sostienen una obra que ninguno podría cantar solo.</p>
+  <p>Vas a elegir tu voz. No la que quisieras tener: la que usas cuando trabajas.</p>
+  <p class="pie">Uno de ustedes va a sostener la partitura. Todavía no. Primero todos eligen.</p>
+  <div style="margin-top:30px"><button class="btn" onclick="gabinete()">Abrir el gabinete</button></div>
+  </div>`);
+}
+
+/* ============ 1 · GABINETE ============ */
+function gabinete(modo){
+  const consulta=modo==='consulta';
+  const cards=ORDEN_VOCES.map(k=>{const v=VOCES[k];return `
+    <button class="gab-card ${!consulta&&S.miVoz===k?'elegida':''}" onclick="ficha('${k}'${consulta?",'consulta'":''})">
+      <span class="nom">${v.n}</span>
+      <span class="obs">${esc(v.obs)}</span>
+      ${staff(v.ejes,true)}
+    </button>`}).join('');
+  pinta(`<div class="aparece">
+  <span class="rotulo">${consulta?'Consulta · seis voces':'El gabinete · seis voces'}</span>
+  <h2>Ninguna está completa</h2>
+  <p style="margin-top:12px">${consulta?'Puedes recorrerlas mientras el coro decide. Nada de lo que abras aquí cambia tu voz ni los códigos que ya digitaste.':'Recorre las seis. Cada una tiene una obsesión, una manera de conducir, cinco ejes y un punto donde desafina. Todas tienen un eje fuera de su registro.'}</p>
+  <div class="eje-cab" style="margin-top:16px"><span class="rotulo" style="margin:0">Los cinco ejes</span>
+    <button class="ayuda" onclick="comoSeLee()">? Cómo se lee</button></div>
+  <div class="gab-grid">${cards}</div>
+  <p class="pie">Una voz es un registro, no un cuerpo. En Fond de l'Étang los sopranos eran niños de once años.</p>
+  ${consulta?`<div style="margin-top:26px"><button class="btn" onclick="atrilSetup()">Volver al atril</button></div>`
+   :(S.miVoz?`<div style="margin-top:26px"><button class="btn" onclick="codigo()">Ver mi código</button></div>`:'')}
+  </div>`);
+}
+
+/* ============ 2 · FICHA ============ */
+function ficha(k,modo){
+  const v=VOCES[k], consulta=modo==='consulta';
+  const filas=EJES.map(e=>{
+    const n=v.ejes[e];
+    return `<div class="lect ${n===0?'cero':''}">
+      <span class="lect-g">${glifo(n)}</span>
+      <span class="lect-c">
+        <span class="lect-e">${EJE_NOM[e]}<b>${NIVEL[n]}</b></span>
+        <span class="lect-d">${EJE_DEF[e]}</span>
+      </span></div>`}).join('');
+  pinta(`<div class="aparece">
+  <button class="btn fantasma" style="width:auto;padding:9px 15px;margin-bottom:20px" onclick="${consulta?"gabinete('consulta')":'gabinete()'}">← ${consulta?'Las seis voces':'El gabinete'}</button>
+  <div class="ficha-cab"><h2>${v.n}</h2><div class="sub">${esc(v.sub)}</div></div>
+
+  <div class="bloque"><span class="rotulo">Su obsesión</span>
+    <p style="font-family:'Fraunces',serif;font-size:1.24rem;line-height:1.34;margin:0">${esc(v.obs)}</p></div>
+
+  <div class="bloque"><span class="rotulo">Cómo lidera</span><p style="margin:0">${esc(v.lidera)}</p></div>
+
+  <div class="bloque">
+    <div class="eje-cab"><span class="rotulo" style="margin:0">Su partitura</span>
+      <button class="ayuda" onclick="comoSeLee('${k}')">? Cómo se lee</button></div>
+    <div style="max-width:340px;margin:10px 0 4px">${staff(v.ejes,false)}</div>
+    <div class="lectura">${filas}</div>
+    <p class="pie"><strong>${EJE_NOM[v.cero]}</strong> es una pausa. En una partitura el silencio se escribe, ocupa tiempo, y no es lo mismo que no haber compuesto nada.</p></div>
+
+  <div class="bloque desafina"><span class="rotulo">Cuándo desafina</span><p style="margin:0">${esc(v.desafina)}</p></div>
+
+  <div class="bloque"><span class="rotulo">Con quién afina</span>
+    <div class="afina-lista">${v.afina.map(x=>`<span class="chip">${x}</span>`).join('')}</div>
+    <p style="margin-top:11px">${esc(v.afinaTxt)}</p></div>
+
+  ${consulta?'':`<div style="margin-top:28px"><button class="btn" onclick="confirmarVoz('${k}')">Esta es mi voz</button></div>`}
+  </div>`);
+}
+
+function confirmarVoz(k){
+  const v=VOCES[k];
+  abrirHoja(`<h3>${v.n}</h3>
+  <p class="tarea-eco">Vas a quedar registrado como ${v.n} para todo el ejercicio. No se puede cambiar.</p>
+  <button class="btn" onclick="fijarVoz('${k}')">Confirmar</button>
+  <button class="btn fantasma" onclick="cerrarHoja()">Seguir mirando</button>`);
+}
+function fijarVoz(k){
+  S.miVoz=k; S.miCodigo=VOCES[k].l+String(Math.floor(Math.random()*90)+10);
+  cerrarHoja(); codigo();
+}
+
+/* ============ 3 · CÓDIGO ============ */
+function codigo(){
+  const v=VOCES[S.miVoz];
+  pinta(`<div class="aparece">
+  <span class="rotulo">Tu voz</span>
+  <div class="codigo-grande mono">${S.miCodigo}</div>
+  <h3 style="margin-bottom:4px">${v.n}</h3>
+  <p style="font-style:italic;color:var(--grafito)">${esc(v.obs)}</p>
+  <div class="pauta-sep"></div>
+  <p>Dile este código a quien vaya a sostener la partitura. Dile el código, no la voz.</p>
+  <p class="pie">No mires la pantalla de nadie. Lo que hace funcionar esto es que el coro aparezca completo, de golpe, y no armado de a poco.</p>
+  <div style="margin-top:30px">
+    <button class="btn fantasma" onclick="atrilSetup()">Sostener la partitura</button>
+    <button class="btn fantasma" onclick="preguntaFinal()">El coro ya terminó</button>
+  </div></div>`);
+}
+
+/* ============ 4 · ATRIL ============ */
+function atrilSetup(){
+  S.esAtril=true;
+  pinta(`<div class="aparece">
+  <span class="rotulo">El atril</span>
+  <h2>Desde aquí se opera el coro</h2>
+  <p style="margin-top:12px">Tu voz ya está adentro. ¿Cuántos son en total, contándote?</p>
+  <div class="tam-grid">${[3,4,5,6,7].map(t=>`<button class="tam-btn ${S.n===t?'on':''}" onclick="fijarN(${t})">${t}</button>`).join('')}</div>
+  <button class="btn fantasma" style="margin-top:14px" onclick="irAConsulta()">Ver el perfil de las seis voces</button>
+  <div id="zonaCodigos"></div></div>`);
+  if(S.n) pintarCodigos();
+}
+function fijarN(t){S.n=t;S.borrador=[];S.coro=[{cod:S.miCodigo,voz:S.miVoz,atril:true}];atrilSetup();}
+function guardarBorrador(){
+  if(!S.n) return;
+  S.borrador=Array.from({length:S.n-1},(_,i)=>{const e=document.getElementById('ci'+i);return e?e.value:''});
+}
+function irAConsulta(){guardarBorrador();gabinete('consulta');}
+
+function pintarCodigos(){
+  const faltan=S.n-1;
+  document.getElementById('zonaCodigos').innerHTML=`
+  <div class="pauta-sep"></div>
+  <p>Pide los códigos en voz alta y digítalos.</p>
+  <div class="cod-lista">
+    <div class="cod-fila"><span class="num mono">01</span>
+      <input class="cod-input fija" value="${S.miCodigo}" disabled>
+      <span class="voz">tú</span></div>
+    ${Array.from({length:faltan},(_,i)=>`
+    <div class="cod-fila"><span class="num mono">${String(i+2).padStart(2,'0')}</span>
+      <input class="cod-input" id="ci${i}" value="${(S.borrador[i]||'')}" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="—" oninput="revisarCodigo(${i})">
+      <span class="voz" id="cv${i}"></span></div>`).join('')}
+  </div>
+  <p class="aviso" id="avisoCod"></p>
+  <p class="pie">Si alguien dictó mal, corrígelo ahora. Después de dar el tono no se toca nada.</p>
+  <div style="margin-top:22px"><button class="btn" id="btnTono" disabled onclick="confirmarTono()">Dar el tono</button></div>`;
+  if(S.borrador.some(x=>x)) revisarCodigo(0);
+}
+
+function revisarCodigo(i){
+  const el=document.getElementById('ci'+i); el.value=el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const out=[]; let ok=true, msg='';
+  for(let j=0;j<S.n-1;j++){
+    const e=document.getElementById('ci'+j), val=e.value.trim(), lbl=document.getElementById('cv'+j);
+    e.classList.remove('mala'); lbl.textContent='';
+    if(val.length===0){ok=false;continue;}
+    const voz=POR_LETRA[val[0]];
+    if(val.length!==3||!voz||!/^\d\d$/.test(val.slice(1))){e.classList.add('mala');ok=false;msg='Un código es una letra y dos números. Revisa el '+(j+2)+'.';continue;}
+    if(val===S.miCodigo||out.includes(val)){e.classList.add('mala');ok=false;msg='Ese código ya está en la lista. Pídelo otra vez.';continue;}
+    out.push(val); lbl.textContent=VOCES[voz].n;
+  }
+  guardarBorrador();
+  document.getElementById('avisoCod').textContent=msg;
+  document.getElementById('btnTono').disabled=!ok;
+  if(ok){S.coro=[{cod:S.miCodigo,voz:S.miVoz,atril:true}].concat(out.map(c=>({cod:c,voz:POR_LETRA[c[0]],atril:false})));}
+}
+
+function confirmarTono(){
+  abrirHoja(`<h3>Dar el tono</h3>
+  <p class="tarea-eco">El coro queda como está. Los códigos no se vuelven a tocar.</p>
+  <button class="btn" onclick="cerrarHoja();armarCoro()">Dar el tono</button>
+  <button class="btn fantasma" onclick="cerrarHoja()">Volver a revisar</button>`);
+}
+
+/* ============ 5 · RETRATO SONORO ============ */
+const cobertura=()=>{const c={};EJES.forEach(e=>c[e]=0);S.coro.forEach(m=>EJES.forEach(e=>c[e]+=VOCES[m.voz].ejes[e]));return c;};
+
+const RET_DOM={
+ fundamento:'Este coro suena grave. El peso está abajo, en la línea que no se mueve, en la voz que llega tarde a entusiasmarse y nunca tiembla.',
+ proyeccion:'Este coro se oye desde el fondo del salón. Hay volumen, hay cuerpo puesto adelante, hay gente dispuesta a que le vean la cara mientras habla.',
+ escucha:'Este coro suena bajo de volumen y muy adentro. Registra la sala, la lee, sabe quién dejó de hablar en el minuto doce.',
+ agilidad:'Este coro no se queda quieto. Cambia de línea a mitad de compás, cubre lo que se abra, absorbe el impacto con el cuerpo antes de que alguien lo nombre.',
+ tesitura:'Este coro cubre mucho rango. Se mueve entre registros sin forzarse, traduce de un idioma a otro, hace que lo de arriba llegue abajo.'};
+const RET_AUS={
+ fundamento:'Debajo no hay nada sosteniendo: nadie en la sala sabe qué se rompe cuando esto avance.',
+ proyeccion:'Nadie aquí sube el volumen: lo que este coro descubra va a quedarse en el cuarto donde lo descubrió.',
+ escucha:'Nadie aquí se detiene a oír la sala: lo que no se diga en voz alta no va a existir para este coro.',
+ agilidad:'Nadie aquí improvisa: si la partitura se rompe, este coro sigue en la nota que le tocaba.',
+ tesitura:'Nadie aquí traduce: lo que se decida va a salir en un solo idioma y va a llegar a quien ya lo hablaba.'};
+
+function retratoTexto(){
+  const c=cobertura(), ord=EJES.slice().sort((a,b)=>c[b]-c[a]);
+  const dom=ord[0], aus=ord[ord.length-1];
+  const distintas=new Set(S.coro.map(m=>m.voz)).size;
+  const dobles=Object.entries(S.coro.reduce((a,m)=>(a[m.voz]=(a[m.voz]||0)+1,a),{})).filter(([,n])=>n>1);
+  let t3='';
+  if(dobles.length){
+    const nom=dobles.map(([v,n])=>`${n} ${VOCES[v].pl}`).join(' y ');
+    t3=`Hay voces dobladas — ${nom} — y una voz doblada no suena más ancha: suena más fuerte en el mismo lugar.`;
+  }else if(distintas===S.coro.length && distintas>=5){
+    t3='No hay dos voces iguales. Cada línea de este coro la sostiene una sola persona.';
+  }else{
+    t3='Seis registros existen y este coro trajo '+distintas+'.';
+  }
+  return {dom,aus,html:`<span class="destacado">${RET_DOM[dom]}</span><p>${RET_AUS[aus]}</p><p>${t3}</p>`};
+}
+
+function armarCoro(){
+  S.version = S.n<=4?3 : S.n<=6?4 : 5;
+  elegirPiezas();
+  const r=retratoTexto();
+  pinta(`<div class="aparece">
+  <span class="rotulo">Así suena este coro</span>
+  <div class="retrato" style="margin-top:14px">${r.html}</div>
+  <div class="aviso-regla tarde">
+    <span class="rotulo">Antes de empezar</span>
+    <p>En cada pieza hay menos compases que miembros. <strong>${S.n-S.version===1?'Uno de ustedes no va a cantar':S.n-S.version+' de ustedes no van a cantar'}.</strong> ${S.n-S.version===1?'Ustedes deciden quién':'Ustedes deciden quiénes'}.</p>
+    <p>Quien quede fuera en una pieza entra obligatoriamente en la siguiente.</p>
+  </div>
+  <div style="margin-top:22px" class="tarde2"><button class="btn" onclick="abrirPieza()">Empezar la pieza primera</button></div>
+  </div>`);
+}
+
+/* ============ 6 · SELECCIÓN DE PIEZAS ============ */
+function elegirPiezas(){
+  // terreno real: cuántos compases de esta versión puede cubrir el coro que hay
+  const vocesCoro=new Set(S.coro.map(m=>m.voz));
+  const puntaje=AMBITOS.map((a,i)=>{
+    let p=0;
+    a.v[S.version].forEach(x=>{
+      if(vocesCoro.has(x.a)) p+=2;
+      else if(vocesCoro.has(x.c)) p+=1;
+    });
+    return {i,p:p/a.v[S.version].length + Math.random()*.12};
+  });
+  puntaje.sort((x,y)=>y.p-x.p);
+  const alta=puntaje[0].i, baja=puntaje[puntaje.length-1].i;
+  const medio=puntaje.slice(1,-1).sort((x,y)=>Math.abs(x.p-1)-Math.abs(y.p-1))[0].i;
+  S.piezas=[alta,medio,baja];
+}
+
+/* ============ 7 · PIEZA ============ */
+const piezaActual=()=>{const a=AMBITOS[S.piezas[S.pIdx]];return{a,cs:a.v[S.version]};};
+const ORD=['primera','segunda','tercera'];
+const ROM=['I','II','III','IV','V'];
+
+function abrirPieza(){S.asign={};pintarPieza();}
+
+function pintarPieza(){
+  const {a,cs}=piezaActual();
+  const usados=Object.values(S.asign);
+  const compases=cs.map((x,i)=>{
+    const m=S.asign[i]!==undefined?S.coro[S.asign[i]]:null;
+    return `<button class="compas ${m?'lleno':''}" onclick="abrirAsignar(${i})">
+      <span class="cifra">${ROM[i]}</span>
+      <span class="cuerpo"><span class="tarea">${esc(x.t)}</span>
+      <span class="casilla mono">${m?m.cod+' · '+VOCES[m.voz].n:'sin asignar'}</span></span></button>`}).join('');
+  const pool=S.coro.map((m,i)=>`<div class="tarjeta ${usados.includes(i)?'usada':''} ${m.atril?'atril':''}">
+      <span>${m.cod}</span><span class="v">${VOCES[m.voz].n}</span></div>`).join('');
+  const faltan=cs.length-usados.length, fuera=S.coro.length-usados.length;
+  pinta(`<div class="aparece">
+  <span class="rotulo">Pieza ${ORD[S.pIdx]} · ${a.nombre}</span>
+  <h2 style="margin-top:6px">${a.titulo}</h2>
+  <div class="situacion">${esc(a.sit)}</div>
+  <p style="font-size:.95rem">${cs.length} compases, ${S.coro.length} voces. Toca un compás y elige quién entra.</p>
+  <p class="pie" style="margin:12px 0 20px">Nadie entra dos veces. Un compás vacío se cuenta como silencio.<br><strong>${S.coro[0].cod}</strong> no puede asignarse a sí mismo: otro tiene que decir dónde va.</p>
+  ${compases}
+  <div class="pool"><span class="rotulo">El coro</span><div class="pool-grid">${pool}</div>
+    <div class="contador">${faltan>0?`Faltan ${faltan} compases por llenar`:`Quedan ${fuera} sin entrar`}</div></div>
+  <div style="margin-top:24px"><button class="btn" ${faltan>0?'disabled':''} onclick="confirmarInterpretar()">Interpretar la pieza</button></div>
+  <p class="aviso" id="avisoRot"></p></div>`);
+}
+
+function abrirAsignar(ci){
+  const {cs}=piezaActual(); S.compasAbierto=ci;
+  const usados=Object.values(S.asign);
+  const yaAqui=S.asign[ci];
+  const ops=S.coro.map((m,i)=>{
+    if(usados.includes(i)&&i!==yaAqui) return '';
+    if(m.atril) return `<button class="op bloq" onclick="pedirPermisoAtril(${i})"><span>${m.cod}</span><span class="vz">alguien más tiene que decirlo</span></button>`;
+    return `<button class="op" onclick="asignar(${i})"><span>${m.cod}</span><span class="vz">${VOCES[m.voz].n}</span></button>`}).join('');
+  abrirHoja(`<h3>Compás ${ROM[ci]}</h3><p class="tarea-eco">${esc(cs[ci].t)}</p>${ops}
+    ${yaAqui!==undefined?`<button class="btn fantasma" style="margin-top:10px" onclick="quitar(${ci})">Sacar a ${S.coro[yaAqui].cod} de este compás</button>`:''}`);
+}
+function asignar(i){S.asign[S.compasAbierto]=i;cerrarHoja();pintarPieza();}
+function quitar(ci){delete S.asign[ci];cerrarHoja();pintarPieza();}
+function pedirPermisoAtril(i){
+  abrirHoja(`<h3>${S.coro[i].cod}</h3>
+  <p class="tarea-eco">Sostienes la partitura. No decides dónde entras. ¿Otro miembro del coro dijo que entras en este compás?</p>
+  <button class="btn" onclick="asignar(${i})">Sí, alguien lo dijo</button>
+  <button class="btn fantasma" onclick="abrirAsignar(${S.compasAbierto})">Todavía no</button>`);
+}
+
+function confirmarInterpretar(){
+  // rotación
+  const usados=Object.values(S.asign);
+  const fuera=S.coro.filter((m,i)=>!usados.includes(i)).map(m=>m.cod);
+  const repite=fuera.filter(c=>S.fueraPrev.includes(c));
+  if(repite.length){
+    document.getElementById('avisoRot').textContent=`${repite.join(', ')} ya quedó fuera en la pieza anterior y tiene que entrar en esta.`;
+    return;
+  }
+  abrirHoja(`<h3>Interpretar</h3>
+  <p class="tarea-eco">Se interpreta una sola vez. No hay repetición.</p>
+  <button class="btn" onclick="cerrarHoja();evaluar()">Interpretar</button>
+  <button class="btn fantasma" onclick="cerrarHoja()">Volver a mover</button>`);
+}
+
+/* ============ 8 · EVALUACIÓN ============ */
+function evaluar(){
+  const {a,cs}=piezaActual();
+  const vocesCoro=S.coro.map(m=>m.voz);
+  const usados=Object.values(S.asign);
+  const filas=cs.map((x,i)=>{
+    const idx=S.asign[i], m=idx!==undefined?S.coro[idx]:null;
+    let estado, disp=null;
+    if(m&&m.voz===x.a) estado='afinado';
+    else if(m&&m.voz===x.c) estado='casi';
+    else if(vocesCoro.includes(x.a)){estado='noentro';disp=x.a;}
+    else if(vocesCoro.includes(x.c)){estado='noentro';disp=x.c;}
+    else estado='silencio';
+    const cons= estado==='afinado'?x.ok : estado==='casi'?x.mid : x.no;
+    return {i,estado,disp,cons,quien:m?m.cod+' · '+VOCES[m.voz].n:'nadie entró',afina:x.a,casi:x.c,eje:x.e,tarea:x.t,pieza:S.pIdx};
+  });
+  S.hist.push({ambito:a,filas});
+  S.fueraPrev=S.coro.filter((m,i)=>!usados.includes(i)).map(m=>m.cod);
+  resultado();
+}
+
+const ETIQ={afinado:'Afinado',casi:'Casi en tono',noentro:'La voz estaba y no entró',silencio:'Silencio'};
+
+function resultado(){
+  const {ambito,filas}=S.hist[S.hist.length-1];
+  const cuerpo=filas.map(f=>`
+    <div class="res ${f.estado}">
+      <div class="enc"><span class="cf">Compás ${ROM[f.i]}</span><span class="estado">${ETIQ[f.estado]}</span></div>
+      <div class="quien">${esc(f.quien)}</div>
+      <p class="cons">${esc(f.cons)}</p>
+    </div>`).join('');
+  const ultima=S.pIdx===2;
+  pinta(`<div class="aparece">
+  <span class="rotulo">Cómo sonó la pieza ${ORD[S.pIdx]}</span>
+  <h2 style="margin:6px 0 22px">${ambito.titulo}</h2>
+  ${cuerpo}
+  <p class="pie">Aún no. Al final de las tres.</p>
+  <div style="margin-top:26px"><button class="btn" onclick="${ultima?'diagnostico()':'siguientePieza()'}">${ultima?'Cómo sonó el coro':'Pieza '+ORD[S.pIdx+1]}</button></div>
+  </div>`);
+}
+function siguientePieza(){S.pIdx++;abrirPieza();}
+
+/* ============ 9 · CÓMO SONÓ ============ */
+function diagnostico(){
+  const todas=S.hist.flatMap(h=>h.filas);
+  const vocesCoro=[...new Set(S.coro.map(m=>m.voz))];
+  const ausentes=ORDEN_VOCES.filter(v=>!vocesCoro.includes(v));
+
+  // capa 1
+  const pedidas={};
+  todas.forEach(f=>{if(ausentes.includes(f.afina)) (pedidas[f.afina]=pedidas[f.afina]||[]).push(f)});
+  const orden=Object.keys(pedidas).sort((a,b)=>pedidas[b].length-pedidas[a].length);
+  let c1;
+  if(!orden.length){
+    c1=`<p>Las seis obsesiones que las tres piezas reclamaron estaban todas en la sala. Este coro no perdió nada por ausencia.</p>
+        <p>Lo que perdió — si perdió algo — lo perdió por otra razón.</p>`;
+  }else{
+    c1=orden.slice(0,2).map(v=>{
+      const V=VOCES[v], fs=pedidas[v];
+      const lista=fs.map(f=>`pieza ${ORD[f.pieza]}, compás ${ROM[f.i]}`).join('; ');
+      return `<p><strong style="font-family:'Fraunces',serif;font-size:1.15rem">${V.n}</strong> no estuvo. Nadie entró a la sala con esta pregunta encima: <em>${esc(V.obs).toLowerCase().replace(/\.$/,'')}</em>.</p>
+      <p>${esc(V.falta)}</p>
+      <p class="marca">Reclamada en ${fs.length} ${fs.length===1?'compás':'compases'} · ${lista}</p>`}).join('<div class="pauta-sep"></div>');
+  }
+
+  // capa 2
+  const ne=todas.filter(f=>f.estado==='noentro');
+  let c2;
+  if(!ne.length){
+    c2='<p>Cada vez que este coro tuvo la voz que el compás pedía, la puso ahí. No sobró lucidez guardada en el bolsillo.</p>';
+  }else{
+    c2=ne.map(f=>{
+      const V=VOCES[f.disp];
+      const donde=S.hist[f.pieza].filas.find(g=>g.quien.split(' · ')[1]===V.n);
+      const nota=donde?`Entró en el compás ${ROM[donde.i]} de esa misma pieza.`:'Esa persona no cantó en esa pieza.';
+      const ent=f.quien.split(' · ')[1];
+      return `<p><strong>${V.n}</strong> — pieza ${ORD[f.pieza]}, compás ${ROM[f.i]}. ${esc(nota)} ${ent?'Aquí entró '+esc(ent)+'.':'Aquí no entró nadie.'}</p>`}).join('')
+      +`<p class="marca">${ne.length} ${ne.length===1?'compás':'compases'} donde el registro existía en este coro y quedó en otro lugar. Eso no es un vacío de talento.</p>`;
+  }
+
+  // capa 3
+  const af=todas.filter(f=>f.estado==='afinado');
+  const porVoz={};
+  af.forEach(f=>{const v=f.quien.split(' · ')[1]; porVoz[v]=(porVoz[v]||0)+1});
+  const ranking=Object.entries(porVoz).sort((a,b)=>b[1]-a[1]);
+  let c3;
+  if(!af.length){
+    c3='<p>Ningún compás quedó afinado. Las tres piezas pidieron registros que este coro no traía o no puso donde iban, y el resultado se sostuvo igual: alguien entró en cada compás y alguien cargó con lo que salió.</p>';
+  }else{
+    const cab=ranking[0];
+    c3=`<p>${af.length} de ${todas.length} compases ${af.length===1?'quedó afinado':'quedaron afinados'}. ${cab?`La voz que más sostuvo fue <strong>${cab[0]}</strong>, en ${cab[1]} ${cab[1]===1?'compás':'compases'}.`:''}</p>
+    <p>${ranking.length>1?'Lo demás lo sostuvieron '+ranking.slice(1).map(r=>r[0].toLowerCase()).join(', ')+'.':'Ese peso lo cargó una sola voz.'}</p>
+    <p class="marca">${todas.filter(f=>f.estado==='casi').length} compases casi en tono · ${ne.length} con la voz adentro y afuera del compás · ${todas.filter(f=>f.estado==='silencio').length} en silencio.</p>`;
+  }
+
+  pinta(`<div class="aparece">
+  <span class="rotulo">Cómo sonó</span>
+  <h1 style="font-size:1.9rem;margin:6px 0 4px">Tres piezas, ${todas.length} compases</h1>
+  <div class="pauta-sep"></div>
+  <div class="capa"><h3>La voz que no estuvo en la sala</h3><div class="cuerpo">${c1}</div></div>
+  <div class="capa"><h3>La voz que estaba y no entró</h3><div class="cuerpo">${c2}</div></div>
+  <div class="capa"><h3>Lo que sostuvo el coro</h3><div class="cuerpo">${c3}</div></div>
+  <div class="pauta-sep"></div>
+  <p class="pie">Cada uno tiene una última pantalla en su propio teléfono.</p>
+  <div style="margin-top:22px"><button class="btn fantasma" onclick="preguntaFinal()">Ir a mi última pantalla</button></div>
+  </div>`);
+}
+
+/* ============ 10 · PREGUNTA FINAL ============ */
+function preguntaFinal(){
+  const v=S.miVoz?VOCES[S.miVoz]:null;
+  pinta(`<div class="cierre-pregunta aparece">
+  <span class="rotulo" style="margin:0 auto">Tu última pantalla</span>
+  ${v?`<p style="margin:8px 0 0;font-size:1.05rem">Elegiste <strong>${v.n}</strong>.</p>`:''}
+  <div class="q">¿Fue esa la voz<br>que usaste?</div>
+  <p style="color:var(--grafito);font-size:.9rem;font-style:italic">No hay dónde responder. No hay pantalla siguiente.</p>
+  </div>`);
+}
+
+/* ============ REINICIO ============ */
+function pedirReinicio(){
+  abrirHoja(`<h3>Reiniciar el ejercicio</h3>
+  <p class="tarea-eco">Se borra tu voz, tu código y el coro que esté armado. No hay manera de recuperarlo.</p>
+  <p style="font-size:.95rem;margin-bottom:16px">Antes de tocar el botón, asegúrate de que <strong>todos los del grupo reinicien también</strong>. Si unos reinician y otros no, los códigos dejan de coincidir y el coro queda desarmado a mitad de pieza.</p>
+  <button class="btn rojo" onclick="reiniciar()">Reiniciar para todos</button>
+  <button class="btn fantasma" onclick="cerrarHoja()">Volver</button>`);
+}
+function reiniciar(){
+  Object.assign(S,{miVoz:null,miCodigo:null,esAtril:false,n:0,coro:[],version:3,piezas:[],pIdx:0,asign:{},fueraPrev:[],hist:[],compasAbierto:null,borrador:[]});
+  cerrarHoja(); entrada();
+}
+
+/* ============ HOJA ============ */
+function abrirHoja(h){hoja.innerHTML=h;hoja.classList.add('on');velo.classList.add('on');}
+function cerrarHoja(){hoja.classList.remove('on');velo.classList.remove('on');}
+
+entrada();
+
+</script>
+</body>
+</html>
