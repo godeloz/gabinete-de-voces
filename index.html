@@ -263,6 +263,31 @@ em{font-style:italic}
 .lect.cero .lect-e{color:var(--lapiz)}
 .lect.cero .lect-e b{color:var(--lapiz)}
 
+/* ---------- señales, prácticas, recaps ---------- */
+.bloque.entra{background:rgba(46,92,138,.055);border-left:2px solid var(--azul);padding:14px 15px;margin-left:-2px}
+.bloque.entra .rotulo{color:var(--azul)}
+.senales{margin:0;padding:0;list-style:none}
+.senales li{position:relative;padding:0 0 0 20px;margin-bottom:8px;font-size:.94rem;line-height:1.45}
+.senales li:last-child{margin-bottom:0}
+.senales li::before{content:'';position:absolute;left:0;top:.58em;width:9px;height:6px;
+  background:var(--azul);border-radius:60% 60% 60% 60%/70% 70% 70% 70%;transform:rotate(-18deg)}
+.practicas{margin:0 0 14px;padding-left:0;list-style:none;counter-reset:pr}
+.practicas li{counter-increment:pr;position:relative;padding-left:30px;margin-bottom:13px;line-height:1.55}
+.practicas li::before{content:counter(pr);position:absolute;left:0;top:1px;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--papel-alto);background:var(--tinta);
+  width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.consejo{background:var(--papel-alto);border-left:2px solid var(--verde);padding:11px 14px;
+  font-size:.92rem;line-height:1.52;color:var(--tinta-suave);margin:10px 0 4px}
+.recaps{display:flex;flex-direction:column;gap:8px;margin:18px 0 8px}
+.recap{border:1px solid var(--pauta);background:var(--papel-alto);padding:11px 14px;border-radius:2px}
+.recap-t{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px}
+.recap-n{font-family:'Fraunces',serif;font-size:1.06rem;line-height:1.2}
+.recap-d{font-size:.85rem;color:var(--grafito);margin-top:3px;line-height:1.4}
+.cierre-q{text-align:center;padding:14px 0 30px}
+.cierre-q .q{font-family:'Fraunces',serif;font-size:1.62rem;line-height:1.28;margin:14px 0}
+.res .cf{font-family:'IBM Plex Mono',monospace}
+.capa .cuerpo .cf{font-size:.66rem;letter-spacing:.12em;color:var(--grafito);text-transform:uppercase}
+
 /* ---------- reinicio ---------- */
 .reinicio{
   position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;
@@ -289,75 +314,99 @@ em{font-style:italic}
 <div class="hoja" id="hoja"></div>
 <script>
 /* ============ VOCES ============ */
-const EJES = ['tesitura','agilidad','escucha','proyeccion','fundamento']; // de arriba a abajo en el pentagrama
+const EJES = ['tesitura','agilidad','escucha','proyeccion','fundamento'];
 const EJE_NOM = {fundamento:'Fundamento',proyeccion:'Proyección',escucha:'Escucha',agilidad:'Agilidad',tesitura:'Tesitura'};
 
 const VOCES = {
- bajo:{n:'Bajo',l:'B',sub:'La voz que nadie aplaude y que todos extrañan cuando falta.',
+ bajo:{n:'Bajo',l:'B',pl:'bajos',sub:'La voz que nadie aplaude y que todos extrañan cuando falta.',
   obs:'Que no se rompa lo que ya funciona.',
   lidera:'Dando piso. Su equipo sabe exactamente qué no va a cambiar mañana, y eso libera una cantidad de energía que nadie contabiliza. En una crisis la gente lo busca porque su voz no tiembla, y no por valiente: por lenta. Delega tarde y revisa dos veces. Cuando dice que algo está listo, está listo. Su gente rara vez se siente inspirada y casi nunca se siente en riesgo.',
   ejes:{fundamento:3,proyeccion:1,escucha:2,agilidad:0,tesitura:2},
   cero:'agilidad',
+  busca:['Hay que saber qué se rompe si esto se mueve.','Alguien tiene que averiguar de qué depende qué.','La decisión de hoy deja un precedente que otro va a usar en seis meses.','Hay que acotar el costo real, incluido el que no aparece en el reporte.','Hay que dejar por escrito por qué se hizo así.'],
   desafina:'No puede cambiar de línea. Cuando la partitura se rompe a mitad de la obra, el bajo sigue en la nota que le tocaba. Confunde estabilidad con inmovilidad y se entera meses después, cuando ya es historia.',
-  pl:'bajos',
   falta:'Nadie preguntó qué se rompía. Este coro decidió sin saber qué había debajo de lo que estaba moviendo.',
   afina:['Mezzo','Tenor'],
-  afinaTxt:'Mezzo cubre el hueco que aparezca sin preguntar de quién era. Tenor empuja el primer movimiento. Un coro de puros bajos es un edificio muy sólido que nadie usa.'},
+  afinaTxt:'Mezzo cubre el hueco que aparezca sin preguntar de quién era. Tenor empuja el primer movimiento. Un coro de puros bajos es un edificio muy sólido que nadie usa.',
+  fuerte:'Problemas donde el error se paga tarde y caro: sistemas viejos con muchas dependencias, decisiones que sientan precedente, cifras que hay que acotar antes de moverse.',
+  dificil:'Situaciones con reloj. Cuando la respuesta correcta de las nueve ya no sirve a las once, el bajo llega con el análisis terminado y el problema resuelto por otro.',
+  cultiva:'Tu autoridad viene de que la gente confía en tu no. Eso te da un margen que casi nadie tiene: puedes equivocarte rápido una vez sin perder credibilidad, porque tu historial te cubre. Estás gastando ese margen en no usarlo.',
+  practica:['Cuando algo urgente llegue a tu mesa, ponte un límite de tiempo antes de leerlo y decide dentro de ese límite con lo que tengas. Empieza por decisiones reversibles.','Antes de bloquear una propuesta, ofrece la versión más pequeña de ella que sí aceptarías. Cambia «no se puede» por «así sí».','Identifica a la persona más rápida de tu equipo y llévala contigo a las reuniones donde tú serías el freno.']},
 
- baritono:{n:'Barítono',l:'R',sub:'La voz del medio, que traduce.',
+ baritono:{n:'Barítono',l:'R',pl:'barítonos',sub:'La voz del medio, que traduce.',
   obs:'Que lo dicho arriba llegue abajo sin deformarse.',
   lidera:'Traduciendo. Toma la decisión estratégica y la convierte en algo que un equipo pueda hacer el lunes. Se mueve entre pisos: desayuna con la vicepresidencia, almuerza con la operación, y en ambas mesas habla el idioma de la mesa. Su equipo nunca recibe una instrucción que no entienda. Es el primero al que llaman cuando dos áreas dejaron de hablarse.',
   ejes:{fundamento:2,proyeccion:1,escucha:0,agilidad:2,tesitura:3},
   cero:'escucha',
+  busca:['Lo mismo hay que contárselo a públicos que necesitan cosas distintas.','Dos áreas usan la misma palabra para cosas diferentes.','Hay que bajar una decisión a doscientas personas que no estuvieron en la reunión.','Alguien tiene que volver ejecutable lo que se aprobó.','El mensaje va a llegarle a un cliente, a un jefe y a un operario, y no puede ser el mismo texto.'],
   desafina:'Traduce tan bien que deja de oír. Convierte todo lo que llega en algo procesable, incluida la queja que no era procesable, incluido el silencio que significaba otra cosa. La disonancia le pasa por encima transformada en tarea.',
-  pl:'barítonos',
   falta:'Lo que este coro decidió salió en un solo idioma, y llegó completo a quien ya lo hablaba.',
   afina:['Contralto','Soprano'],
-  afinaTxt:'Contralto oye exactamente lo que él filtra sin darse cuenta. Soprano define hacia dónde traducir. Un coro de puros barítonos ejecuta impecablemente la instrucción equivocada.'},
+  afinaTxt:'Contralto oye exactamente lo que él filtra sin darse cuenta. Soprano define hacia dónde traducir. Un coro de puros barítonos ejecuta impecablemente la instrucción equivocada.',
+  fuerte:'Problemas de despliegue y de coordinación: llevar una decisión a la red, hacer que dos equipos que hablan distinto trabajen juntos, comunicar un cambio a públicos con intereses opuestos.',
+  dificil:'Problemas donde lo importante todavía no se ha dicho. Si nadie formuló el asunto de fondo, el barítono traduce con precisión un encargo equivocado.',
+  cultiva:'Eres el que hace que las cosas pasen entre personas que no se entienden, y por eso todo el mundo te manda tareas. El riesgo no es que te sobrecargues: es que empieces a medir tu trabajo por cuántas cosas moviste y no por si valía la pena moverlas.',
+  practica:['En cada reunión, antes de anotar la tarea, pregunta una vez «¿qué es lo que en realidad está pasando aquí?». Espera la respuesta completa antes de escribir.','Una vez por semana, habla con alguien de tu equipo sin agenda y sin convertir nada de lo que diga en un pendiente.','Cuando llegue una queja, sepárala en dos: la parte que se resuelve haciendo algo y la parte que solo pedía ser oída. Atiende las dos por separado.']},
 
- tenor:{n:'Tenor',l:'T',sub:'La voz que entra primero.',
+ tenor:{n:'Tenor',l:'T',pl:'tenores',sub:'La voz que entra primero.',
   obs:'Que alguien dé el primer paso.',
   lidera:'Exponiéndose. Toma la posición antes de que sea segura, y esa exposición le da permiso al resto para moverse. Cuando el equipo está paralizado, el tenor rompe la parálisis con el cuerpo. Pide perdón más que permiso. Arrastra a gente que no sabía que estaba dispuesta a moverse. Su equipo avanza rápido y llega cansado.',
   ejes:{fundamento:1,proyeccion:3,escucha:0,agilidad:2,tesitura:2},
   cero:'escucha',
+  busca:['Hay que decir algo incómodo antes de tener el informe completo.','Alguien tiene que pedir un permiso, una excepción o una autorización, y va a molestar.','Todos saben lo que hay que hacer y nadie lo propone.','Hay que llevarle un problema a un comité que no quiere oírlo.','La ventana se cierra, y esperar a estar seguro equivale a decidir que no.'],
   desafina:'Canta encima de los demás. No por competir: su volumen tapa. Sale de las reuniones convencido de que hubo acuerdo, y lo que hubo fue silencio. El costo de su ímpetu lo pagan personas que él nunca escuchó decir que no.',
-  pl:'tenores',
   falta:'Nadie rompió la parálisis. Este coro esperó a estar seguro, y la seguridad llegó después que el problema.',
   afina:['Contralto','Bajo'],
-  afinaTxt:'Contralto le dice lo que se calló mientras él hablaba. Bajo le pone piso a la carrera. Un coro de puros tenores es una habitación donde todos hablan y nadie tiene idea de qué está pasando.'},
+  afinaTxt:'Contralto le dice lo que se calló mientras él hablaba. Bajo le pone piso a la carrera. Un coro de puros tenores es una habitación donde todos hablan y nadie tiene idea de qué está pasando.',
+  fuerte:'Problemas atascados: hallazgos que nadie lleva arriba, autorizaciones que nadie pide, decisiones que llevan meses circulando en correos entre personas que ya están de acuerdo.',
+  dificil:'Problemas cuyo dato clave todavía no apareció. El tenor mueve primero y descubre después que se movió sobre una lectura incompleta de la sala.',
+  cultiva:'Tu valor es que la gente se mueve cuando tú te mueves. El costo es que dejas de recibir información: cuando alguien sabe que vas a arrancar de todos modos, se ahorra el desacuerdo. Terminas rodeado de gente que te sigue y no te corrige.',
+  practica:['En cada decisión importante, pregunta explícitamente quién no está de acuerdo, y no hables hasta que alguien conteste. El silencio no es aprobación.','Habla de último en al menos una reunión por semana. Anota qué información aparece que no habría aparecido si hablabas primero.','Elige a una persona de tu equipo que te contradiga bien y pídele que lo haga en público, no en privado.']},
 
- contralto:{n:'Contralto',l:'C',sub:'La voz grave que no se anuncia.',
+ contralto:{n:'Contralto',l:'C',pl:'contraltos',sub:'La voz grave que no se anuncia.',
   obs:'Lo que se está callando en esta reunión.',
   lidera:'Oyendo. Su equipo descubre que puede decir cosas que no diría en otra parte, y eso cambia la clase de información que le llega. Detecta el problema seis meses antes de que aparezca en un indicador. Hace pocas preguntas y las hace en el momento exacto. La gente sale de sus reuniones con la sensación de haber sido leída, que es distinta de haber sido escuchada.',
   ejes:{fundamento:2,proyeccion:0,escucha:3,agilidad:1,tesitura:2},
   cero:'proyeccion',
+  busca:['Algo no cuadra y nadie lo ha dicho en voz alta.','Hay que averiguar la causa real, no la que explica los datos.','La respuesta está en hablar con personas y no en revisar un reporte.','Alguien sabe algo que nadie le ha preguntado.','El indicador dice una cosa y la realidad puede estar diciendo otra.'],
   desafina:'Tiene razón en privado. Vio venir la crisis, lo dijo en el pasillo, se lo comentó a dos personas, no lo puso en la mesa. Su lucidez muere en el lugar donde la formuló, y después de la crisis alguien dice que ya se sabía.',
-  pl:'contraltos',
   falta:'Nadie oyó la sala. Lo que no se dijo en voz alta no existió para este coro, y casi siempre había algo.',
   afina:['Tenor','Soprano','Mezzo'],
-  afinaTxt:'Tenor y Soprano llevan su hallazgo a donde se decide. Mezzo convierte lo que oyó en un movimiento. Un coro de puras contraltos sabe todo lo que va a pasar y no evita nada.'},
+  afinaTxt:'Tenor y Soprano llevan su hallazgo a donde se decide. Mezzo convierte lo que oyó en un movimiento. Un coro de puras contraltos sabe todo lo que va a pasar y no evita nada.',
+  fuerte:'Problemas mal formulados: cuando lo que se está resolviendo no es lo que está pasando. Patrones que ningún reporte agrega, causas compartidas que parecen casos aislados, conocimiento que vive en la cabeza de tres personas.',
+  dificil:'Problemas donde el hallazgo hay que defenderlo. La contralto llega a la conclusión correcta y la deja en un documento que nadie abre.',
+  cultiva:'Ves antes que los demás, y eso no sirve de nada si el que decide se entera después. Tu trabajo no termina cuando entiendes: termina cuando alguien con poder de decisión entendió también.',
+  practica:['Cuando notes algo, ponte un plazo de setenta y dos horas para decirlo en un espacio donde se decida. El pasillo no cuenta.','Convierte tu hallazgo en una frase de quince palabras antes de la reunión. Si no cabe, todavía no está listo para ser dicho.','Pídele a alguien con voz fuerte que te acompañe a presentarlo la primera vez, y la segunda hazlo sola.']},
 
- mezzo:{n:'Mezzo',l:'Z',sub:'La voz que se acomoda.',
+ mezzo:{n:'Mezzo',l:'Z',pl:'mezzos',sub:'La voz que se acomoda.',
   obs:'Que el hueco se cubra, sea cual sea el hueco.',
   lidera:'Cubriendo. Cuando el plan se rompe, ya está haciendo otra cosa. Su equipo no colapsa nunca, porque el mezzo absorbe el impacto con el cuerpo antes de que llegue a los demás. Aprende oficios nuevos en fines de semana. Es el primero en llegar a la sala del incidente y el último en irse, y en la reunión del lunes nadie menciona su nombre.',
   ejes:{fundamento:1,proyeccion:2,escucha:2,agilidad:3,tesitura:0},
   cero:'tesitura',
+  busca:['El reloj corre y hay que hacer algo hoy.','El plan se rompió y alguien tiene que sostener la operación mientras se arregla.','Pasó lo que no estaba previsto.','Hay que responder antes de tener el cuadro completo.','Alguien se fue, algo se cayó, y hay un hueco abierto ahora mismo.'],
   desafina:'Cubre todo y no ocupa nada. Al cabo de dos años nadie sabe decir qué hace exactamente. Cuando llega el momento de asignarle un lugar propio no hay lugar: hay una lista de emergencias que atendió. Su versatilidad se paga con ausencia de registro.',
-  pl:'mezzos',
   falta:'Cuando la partitura se rompió, este coro siguió en la nota que le tocaba. Nadie cubrió el hueco que se abrió.',
   afina:['Bajo','Soprano','Contralto'],
-  afinaTxt:'Cualquiera que tenga posición fija. Alguien tiene que sostener una línea para que el mezzo tenga desde dónde moverse. Un coro de puros mezzos resuelve todas las urgencias y no construye nada.'},
+  afinaTxt:'Cualquiera que tenga posición fija. Alguien tiene que sostener una línea para que el mezzo tenga desde dónde moverse. Un coro de puros mezzos resuelve todas las urgencias y no construye nada.',
+  fuerte:'Problemas con reloj: incidentes, caídas, renuncias inesperadas, ventanas que se cierran, cualquier cosa donde la respuesta buena de mañana vale menos que la respuesta aceptable de hoy.',
+  dificil:'Problemas que exigen que lo mismo llegue distinto a públicos distintos. El mezzo resuelve y sigue, y la explicación queda para después, que suele ser nunca.',
+  cultiva:'Tu problema no es que hagas demasiado: es que lo que haces no deja huella con tu nombre. Cubrir huecos es indispensable y es invisible, y la invisibilidad se vuelve un techo alrededor del cuarto año.',
+  practica:['Elige un territorio que sea tuyo y no lo sueltes por seis meses, aunque se abran huecos más urgentes al lado.','Cuando resuelvas una emergencia, escribe en tres líneas qué pasó y qué hiciste, y mándalo. No como reporte: como registro de que existió.','Antes de cubrir un hueco, pregunta de quién era. A veces la mejor jugada es que se note que estaba abierto.']},
 
- soprano:{n:'Soprano',l:'S',sub:'La voz que llega arriba.',
+ soprano:{n:'Soprano',l:'S',pl:'sopranos',sub:'La voz que llega arriba.',
   obs:'Que exista un lugar al cual ir.',
   lidera:'Dando dirección. Su equipo puede repetir en una frase lo que están haciendo y por qué, y eso los sostiene en semanas donde nada funciona. Convierte una intención vaga en algo que se puede desear. Habla en futuro con una naturalidad que a algunos les incomoda. Atrae gente buena y la pierde cuando el destino tarda demasiado en volverse camino.',
   ejes:{fundamento:0,proyeccion:3,escucha:1,agilidad:2,tesitura:2},
   cero:'fundamento',
+  busca:['Hay que decir hacia dónde vamos para que la decisión tenga sentido.','La noticia es mala y alguien tiene que darla de frente.','Hay que sostener algo ante una junta que solo ve el número.','El equipo necesita una razón, no una instrucción.','Lo que se comunique decide si la gente se siente parte o se siente sobrante.'],
   desafina:'No sabe qué sostiene el piso donde está parada. Propone la migración sin conocer el sistema que va a migrar, anuncia el rumbo sin saber qué cuesta desmontar lo anterior. Su visión es correcta y flota; cuando toca aterrizarla, alguien más descubre que no había cómo.',
-  pl:'sopranos',
   falta:'Nadie nombró el destino. Este coro resolvió compases sin que existiera un lugar al cual ir.',
   afina:['Bajo','Barítono'],
-  afinaTxt:'Bajo le dice qué se rompe si avanza. Barítono convierte su rumbo en algo ejecutable. Un coro de puras sopranos tiene una dirección espléndida y ningún camino.'}
+  afinaTxt:'Bajo le dice qué se rompe si avanza. Barítono convierte su rumbo en algo ejecutable. Un coro de puras sopranos tiene una dirección espléndida y ningún camino.',
+  fuerte:'Problemas donde el cómo se cuenta cambia lo que pasa: anuncios difíciles, decisiones impopulares, presupuestos que hay que defender, equipos que necesitan saber para qué está sirviendo su esfuerzo.',
+  dificil:'Problemas de terreno. La soprano decide hacia dónde sin saber qué cuesta desmontar lo que hay, y el costo aparece cuando ya se anunció.',
+  cultiva:'La gente te sigue porque le das una razón para hacerlo, y eso es escaso. Lo que te falta no es realismo: es la costumbre de preguntar qué sostiene el piso antes de anunciar el salto.',
+  practica:['Antes de comprometer una fecha en público, siéntate una hora con quien conoce el sistema por dentro y hazle una sola pregunta: qué se rompe.','Por cada destino que anuncies, pide que alguien escriba los tres primeros pasos concretos. Si nadie puede, todavía no es un destino.','Aprende en detalle un proceso operativo al año. Uno solo, hasta el fondo.']}
 };
 const ORDEN_VOCES = ['bajo','baritono','tenor','contralto','mezzo','soprano'];
 const POR_LETRA = {}; ORDEN_VOCES.forEach(k=>POR_LETRA[VOCES[k].l]=k);
@@ -367,361 +416,361 @@ const c=(t,a,cs,e,ok,mid,no)=>({t,a,c:cs,e,ok,mid,no});
 
 const AMBITOS = [
 {id:'cartera',nombre:'Cartera vencida',titulo:'Todos al mismo tiempo',ejeD:'fundamento',ejeS:'escucha',
- sit:'Trescientos cuarenta créditos de vehículo de carga, otorgados entre 2022 y 2024, todos al mismo sector: transporte intermunicipal de mercancía seca. La mora pasó de cuatro por ciento a diecinueve en cinco meses. Ninguno de los trescientos cuarenta tiene un historial malo. Fallaron todos juntos, y eso no es un problema de comportamiento de pago.',
+ sit:'Trescientos cuarenta camioneros le deben plata al banco. Todos compraron su tractocamión a crédito entre 2022 y 2024, todos hacen la misma clase de ruta, y todos empezaron a atrasarse en el mismo trimestre. Ninguno tiene mal historial: hasta hace cinco meses pagaban puntual. Si el banco los trata como incumplidos y les quita los camiones, ellos pierden el trabajo y el banco termina con doscientos vehículos que no puede vender. Si no hace nada, la mora sigue subiendo y hay que apartar plata que nadie recupera. Todavía nadie ha preguntado qué les pasó a todos al mismo tiempo.',
  v:{
  3:[
-  c('Entender por qué falla un sector entero al mismo tiempo.','contralto','bajo','escucha',
+  c('Averiguar por qué se atrasaron todos a la vez. La respuesta no está en el sistema de cobranza: está en lo que ellos hacen todos los días.','contralto','bajo','escucha',
    'Alguien llama a doce deudores y no pregunta por la cuota. Pregunta por la ruta. Aparece lo mismo doce veces: un peaje nuevo en el corredor del Magdalena que le agregó nueve horas y un tanqueo al viaje.',
    'Se cruzan los créditos con la base de matrículas y se confirma que el noventa por ciento opera el mismo corredor. La causa queda acotada, no explicada.',
    'Se trata cada caso por separado. Trescientas cuarenta gestiones de cobranza individuales sobre un problema que no era individual.'),
-  c('Decidir qué se hace con las garantías y con la política de provisión.','bajo','baritono','fundamento',
+  c('Diseñar cómo se les cambian las condiciones del crédito sin dañar a los otros ochocientos transportadores del banco que sí están al día.','bajo','baritono','fundamento',
    'Se reestructura con período de gracia atado al flujo real de la ruta, sin tocar la calificación del sector completo. La provisión sube este trimestre y no arrastra a los otros ochocientos créditos de transporte que sí están sanos.',
    'Se reestructura en bloque con las mismas condiciones para los trescientos cuarenta. Funciona para la mayoría. Ciento diez quedan con una cuota que tampoco pueden pagar.',
    'Se ejecutan las garantías. Aparecen doscientos tractocamiones en un mercado que no absorbe doscientos tractocamiones, y el remate deja una pérdida mayor que la mora.'),
-  c('Sostener la decisión ante un comité de riesgo que ve un sector en rojo.','tenor','soprano','proyeccion',
+  c('Convencer a un comité que ve el sector en rojo de aprobar esto igual, sabiendo que el indicador del trimestre va a verse mal.','tenor','soprano','proyeccion',
    'Se presenta el martes con lo que hay, se pide la excepción, se acepta que el indicador del trimestre va a verse mal. La reestructuración arranca en once días.',
    'Se presenta dentro de una propuesta de política sectorial. El comité aprueba el marco y pide un piloto. El piloto empieza en seis semanas.',
    'Nadie lleva el tema al comité con la fuerza suficiente. La cartera sigue su curso normal y en el reporte anual el sector transporte aparece como decisión de originación fallida.')],
  4:[
-  c('Entender por qué falla un sector entero al mismo tiempo.','contralto','mezzo','escucha',
+  c('Averiguar por qué se atrasaron todos a la vez, hablando con ellos en vez de mirar el reporte.','contralto','mezzo','escucha',
    'Doce llamadas y una pregunta que no era sobre la cuota. El peaje del Magdalena aparece doce veces.',
    'El cruce con matrículas confirma el corredor común. Falta saber qué pasó en ese corredor.',
    'Trescientas cuarenta gestiones individuales sobre una causa compartida.'),
-  c('Establecer qué se rompe si se reestructura el sector completo.','bajo','contralto','fundamento',
+  c('Establecer qué se daña en el resto del banco si se le cambian las condiciones a un sector entero de golpe.','bajo','contralto','fundamento',
    'Se identifica que la reestructuración masiva dispara una recalificación automática de todo el portafolio de transporte. Se aísla el subsegmento antes de mover nada.',
    'Se detecta el riesgo de contagio a mitad del proceso y se corrige. Dos semanas de retroceso.',
    'Se reestructura y ochocientos créditos sanos amanecen recalificados. La provisión del trimestre se triplica.'),
-  c('Bajar la nueva condición a doscientas oficinas y a la fuerza de cobranza.','baritono','bajo','tesitura',
+  c('Hacer que doscientas oficinas y el equipo de cobranza apliquen la nueva condición igual, cada uno con las palabras que su trabajo necesita.','baritono','bajo','tesitura',
    'La oficina recibe un criterio de tres líneas y un ejemplo. El call center recibe un libreto distinto, con las palabras que sí puede decir. Nadie improvisa.',
    'Sale una circular correcta y completa de once páginas. Las oficinas grandes la aplican bien. Las pequeñas llaman a preguntar durante un mes.',
    'Cada regional interpreta a su manera. Tres deudores reciben tres ofertas distintas y una de ellas circula por WhatsApp entre transportadores.'),
-  c('Sostener la decisión ante el comité de riesgo.','soprano','tenor','proyeccion',
+  c('Darle al comité una razón para aprobar esto que no sea el número del trimestre.','soprano','tenor','proyeccion',
    'Se nombra el destino antes que el problema: este sector va a existir en tres años y el banco quiere estar adentro. El comité aprueba con el indicador en rojo.',
    'Se presenta el análisis completo, sin destino. El comité aprueba el análisis y pide volver con una propuesta.',
    'El tema no llega. La cartera sigue su curso.')],
  5:[
-  c('Entender por qué falla un sector entero al mismo tiempo.','contralto','bajo','escucha',
+  c('Averiguar por qué se atrasaron todos a la vez, hablando con ellos en vez de mirar el reporte.','contralto','bajo','escucha',
    'Doce llamadas, una pregunta sobre la ruta y no sobre la cuota. El peaje del Magdalena, nueve horas más, un tanqueo adicional por viaje.',
    'El cruce de datos confirma el corredor común y deja la causa a medio camino.',
    'Trescientas cuarenta gestiones individuales sobre una causa compartida.'),
-  c('Establecer qué se rompe si se reestructura el sector completo.','bajo','baritono','fundamento',
+  c('Establecer qué se daña en el resto del banco si se le cambian las condiciones a un sector entero de golpe.','bajo','baritono','fundamento',
    'Se aísla el subsegmento antes de tocarlo. Los ochocientos créditos sanos de transporte no se recalifican.',
    'El contagio se detecta a mitad de camino y se corrige con dos semanas de atraso.',
    'La provisión del trimestre se triplica por arrastre.'),
-  c('Un deudor con veintidós vehículos entra en cesación antes de que la propuesta esté lista.','mezzo','tenor','agilidad',
+  c('Un transportador con veintidós camiones deja de pagar antes de que la propuesta esté lista. Hay que hacer algo con él esta semana.','mezzo','tenor','agilidad',
    'Se le aplica el acuerdo antes de que exista el acuerdo, con un anexo firmado el mismo viernes. Los veintidós vehículos siguen operando y el caso se vuelve el ejemplo de la circular.',
    'Se congela la gestión de cobro sobre ese deudor y se le pide esperar. Espera. Pierde dos contratos en la espera.',
    'Se aplica el procedimiento estándar. Los veintidós vehículos quedan inmovilizados y la noticia llega al gremio antes que al comité.'),
-  c('Bajar la nueva condición a doscientas oficinas y a la fuerza de cobranza.','baritono','contralto','tesitura',
+  c('Hacer que doscientas oficinas y el equipo de cobranza apliquen la nueva condición igual, cada uno con las palabras que su trabajo necesita.','baritono','contralto','tesitura',
    'Criterio de tres líneas para la oficina, libreto distinto para el call center, ejemplo real para ambos. Una versión, dos traducciones.',
    'Circular de once páginas, correcta. Las oficinas pequeñas llaman a preguntar durante un mes.',
    'Tres ofertas distintas circulando por WhatsApp entre transportadores.'),
-  c('Sostener la decisión ante el comité de riesgo y ante la junta.','tenor','soprano','proyeccion',
+  c('Sostener la decisión ante el comité y ante la junta, con el indicador del trimestre en contra.','tenor','soprano','proyeccion',
    'Se presenta el martes, se pide la excepción, se acepta el trimestre en rojo. Arranca en once días.',
    'Se aprueba el marco, se pide un piloto. Seis semanas.',
    'El sector transporte queda registrado como una decisión de originación fallida.')]}},
 
 {id:'mesa',nombre:'Mesa de dinero',titulo:'Cuarenta minutos',ejeD:'agilidad',ejeS:'proyeccion',
- sit:'El dato de inflación sale a las 7:00 y llega ochenta puntos básicos por encima de lo que descontaba la curva. La mesa tiene una posición larga en TES de mediano plazo y una cobertura que vence hoy. El mercado abre a las 8:00. Hasta las 7:40 se puede mover sin pedirle permiso a nadie; después, cualquier movimiento excede el límite de la mesa y requiere comité.',
+ sit:'Son las siete de la mañana. Acaba de salir el dato de inflación y llegó mucho más alto de lo que todo el mundo esperaba, lo cual significa que unos títulos que el banco tiene guardados van a valer bastante menos cuando abra el mercado a las ocho. El equipo puede venderlos por su cuenta hasta las 7:40; después de esa hora, cualquier movimiento necesita la autorización de un directivo que todavía está durmiendo. Vender rápido puede evitar la pérdida, o puede alertar al mercado y hacerla peor. Esperar da mejor información y menos margen para usarla. Cuarenta minutos.',
  v:{
  3:[
-  c('Mover la posición antes de las 7:40 o no moverla.','mezzo','tenor','agilidad',
+  c('Decidir si se vende ahora, con información incompleta, o se espera a que abra el mercado.','mezzo','tenor','agilidad',
    'Se reduce a la mitad en veintidós minutos, en tres tramos, sin mover la curva. La otra mitad queda cubierta con lo que se alcanzó a renovar.',
    'Se cierra toda la posición de golpe a las 7:38. Se ejecuta. El precio del último tramo es peor y el mercado nota quién estaba vendiendo.',
    'Se decide esperar la apertura para tener más información. A las 8:14 la información es el precio.'),
-  c('Pedir la excepción de límite para recomponer con el mercado abierto.','tenor','mezzo','proyeccion',
+  c('Despertar a un directivo para pedirle permiso de pasarse del límite autorizado.','tenor','mezzo','proyeccion',
    'Se llama al presidente del comité a las 7:50, sin presentación y sin correo previo. La excepción sale verbal a las 7:56 y por escrito a las 9:20.',
    'Se convoca comité extraordinario. Se reúne a las 9:10. La excepción llega correcta y una hora tarde.',
    'Nadie pide nada. La mesa opera el día entero dentro del límite, con la posición equivocada.'),
-  c('Establecer qué política se está tocando y qué precedente queda.','bajo','baritono','fundamento',
+  c('Dejar por escrito por qué se saltaron la regla y hasta dónde vale ese permiso, antes de que alguien lo use el año entrante para otra cosa.','bajo','baritono','fundamento',
    'Se documenta la excepción con su fundamento y su fecha de vencimiento el mismo día. Cuando auditoría pregunta en septiembre, la respuesta ya está escrita.',
    'Se documenta a la semana siguiente, completo. El acta reconstruye lo que pasó con la memoria de tres personas.',
    'Queda una excepción sin registro y un precedente que otros usan en octubre para algo que no se parece.')],
  4:[
-  c('Leer el dato antes de reaccionar al dato.','contralto','mezzo','escucha',
+  c('Antes de reaccionar, averiguar si la cifra dice lo que todos creen que dice.','contralto','mezzo','escucha',
    'Alguien abre el desagregado y ve que sesenta de los ochenta puntos vienen de un rubro estacional que se revierte en el corte siguiente. La sorpresa es menor de lo que parece.',
    'Se revisa el desagregado y se confirma que el dato es sólido. El movimiento posterior se hace sobre información completa.',
    'Se opera contra el titular. El rubro se revierte en octubre y la posición se recompone dos veces.'),
-  c('Mover la posición antes de las 7:40 o no moverla.','mezzo','baritono','agilidad',
+  c('Decidir si se vende antes de las 7:40 o no se vende.','mezzo','baritono','agilidad',
    'Reducción a la mitad en tres tramos, veintidós minutos, sin mover la curva.',
    'Cierre total a las 7:38. Peor precio en el último tramo y una firma visible en el mercado.',
    'Se espera la apertura. A las 8:14 la información es el precio.'),
-  c('Pedir la excepción de límite.','tenor','soprano','proyeccion',
+  c('Despertar a un directivo para pedirle permiso de pasarse del límite.','tenor','soprano','proyeccion',
    'Llamada a las 7:50, excepción verbal a las 7:56.',
    'Comité extraordinario a las 9:10. Correcto y tarde.',
    'La mesa opera el día dentro del límite con la posición equivocada.'),
-  c('Dejar registro de la excepción y del precedente.','bajo','contralto','fundamento',
+  c('Dejar por escrito por qué se hizo la excepción y hasta dónde vale.','bajo','contralto','fundamento',
    'Fundamento y fecha de vencimiento, escritos el mismo día.',
    'Acta reconstruida a la semana con la memoria de tres personas.',
    'Un precedente sin registro que alguien invoca en octubre para algo distinto.')],
  5:[
-  c('Mover la posición antes de las 7:40 o no moverla.','mezzo','tenor','agilidad',
+  c('Decidir si se vende ahora, con información incompleta, o se espera a que abra el mercado.','mezzo','tenor','agilidad',
    'Mitad de la posición, tres tramos, veintidós minutos, sin mover la curva.',
    'Cierre total a las 7:38, peor precio, firma visible.',
    'A las 8:14 la información es el precio.'),
-  c('Leer qué hay realmente adentro del dato.','contralto','bajo','escucha',
+  c('Averiguar si la cifra dice lo que todos creen que dice, antes de que sea tarde para usarlo.','contralto','bajo','escucha',
    'Sesenta de los ochenta puntos vienen de un rubro estacional reversible. La sorpresa es la mitad de lo que parece.',
    'Se confirma que el dato es sólido y no se ve el componente estacional.',
    'Se opera contra el titular y se recompone dos veces.'),
-  c('Pedir la excepción de límite.','tenor','soprano','proyeccion',
+  c('Despertar a un directivo para pedirle permiso de pasarse del límite autorizado.','tenor','soprano','proyeccion',
    'Excepción verbal a las 7:56, escrita a las 9:20.',
    'Comité extraordinario a las 9:10.',
    'Nadie pide nada.'),
-  c('Registrar la excepción y acotar el precedente.','bajo','baritono','fundamento',
+  c('Dejar por escrito por qué se saltaron la regla y hasta dónde vale ese permiso.','bajo','baritono','fundamento',
    'Documentado el mismo día, con vencimiento explícito.',
    'Acta a la semana siguiente.',
    'Precedente sin registro, reutilizado en octubre.'),
-  c('Explicarle el movimiento a tesorería, a riesgo y a la fuerza comercial que vende TES a clientes.','baritono','soprano','tesitura',
+  c('Explicarle lo que pasó a tres áreas que necesitan cosas distintas: la que opera, la que controla el riesgo y la que le da la cara al cliente.','baritono','soprano','tesitura',
    'Tres versiones del mismo hecho, cada una con lo que esa área necesita hacer el lunes. La fuerza comercial sabe qué decirle a un cliente que llama asustado.',
    'Un correo general y correcto. Comercial improvisa dos días.',
    'La versión que circula adentro es que la mesa perdió plata. Tres clientes retiran mandato.')]}},
 
 {id:'core',nombre:'Migración del core',titulo:'Lo que sostiene el edificio',ejeD:'tesitura',ejeS:'fundamento',
- sit:'El core de depósitos entró en producción en 1998. Treinta y un sistemas cuelgan de él, incluidos dos que nadie recuerda haber construido. La migración está aprobada, presupuestada y con proveedor contratado. El negocio no puede parar: cuatro millones de cuentas, nómina de medio país, un fin de semana de corte disponible en todo el año.',
+ sit:'El sistema donde viven las cuentas de ahorro de cuatro millones de clientes se programó en 1998. Otros treinta y un sistemas dependen de él, incluidos dos que nadie recuerda haber construido. Hay que reemplazarlo sin apagar el banco: la gente sigue cobrando su sueldo, pagando servicios y sacando plata todos los días. Solo hay un fin de semana en el año con movimiento suficientemente bajo para hacer el cambio. Si sale mal, el lunes millones de personas abren la app y ven un saldo que no es el suyo. Las tres personas que entienden de verdad cómo funciona el sistema viejo se jubilan este año.',
  v:{
  3:[
-  c('Fijar un lenguaje común entre el proveedor, tecnología, operaciones y el negocio.','baritono','soprano','tesitura',
+  c('Lograr que el proveedor, tecnología, operaciones y el negocio usen las mismas palabras para las mismas cosas antes de construir nada.','baritono','soprano','tesitura',
    'Aparece un glosario de once términos que significan lo mismo para todos. «Cuenta inactiva» deja de significar tres cosas distintas según quién lo diga.',
    'Se define la arquitectura con precisión técnica. El negocio firma sin entender del todo qué firmó y lo descubre en la prueba de usuario.',
    'Cada área trabaja con su vocabulario. En marzo se descubre que el proveedor construyó sobre una definición de saldo disponible que operaciones nunca usó.'),
-  c('Mapear qué depende del sistema viejo.','bajo','contralto','fundamento',
+  c('Averiguar qué cosas del banco dejan de funcionar si se apaga el sistema viejo, incluidas las que no están en ningún inventario.','bajo','contralto','fundamento',
    'Aparecen treinta y uno, más dos que no estaban en ningún inventario: un proceso de embargos judiciales y una interfaz con una fiduciaria. Ambos se incluyen antes de tocar nada.',
    'Se mapean veintinueve. Los dos faltantes se descubren en la prueba integrada, con tiempo para reaccionar.',
    'Se migra con el inventario oficial. El proceso de embargos deja de correr un martes y el banco se entera por un juzgado.'),
-  c('El fin de semana de corte.','mezzo','tenor','agilidad',
+  c('El fin de semana del cambio: algo va a fallar a mitad de la noche y hay que decidir en minutos si se sigue o se devuelve todo.','mezzo','tenor','agilidad',
    'A las 4 de la mañana del domingo falla la carga de un archivo y se levanta la ruta alterna en cuarenta minutos. El lunes nadie afuera se entera de nada.',
    'Se decide revertir a tiempo, limpio, sin daño. Se pierde el fin de semana y el siguiente disponible es en once meses.',
    'Se insiste con el plan original. El lunes hay cuatro millones de saldos que no cuadran y un call center que no puede explicar por qué.')],
  4:[
-  c('Fijar un lenguaje común entre proveedor, tecnología, operaciones y negocio.','baritono','tenor','tesitura',
+  c('Lograr que el proveedor, tecnología, operaciones y el negocio usen las mismas palabras para las mismas cosas.','baritono','tenor','tesitura',
    'Glosario de once términos. «Cuenta inactiva» deja de significar tres cosas.',
    'Arquitectura precisa, negocio firmando lo que no entiende del todo.',
    'El proveedor construye sobre una definición que operaciones nunca usó.'),
-  c('Los tres que saben cómo funciona el sistema viejo se jubilan este año.','contralto','bajo','escucha',
+  c('Sacarles a los tres que se jubilan este año lo que saben del sistema viejo y que no está escrito en ninguna parte.','contralto','bajo','escucha',
    'Alguien nota que la documentación existente describe el sistema de 2011 y no el actual. Se sientan con los tres antes de que se vayan, sin agenda, durante nueve semanas.',
    'Se les pide documentar lo que saben. Documentan lo que recuerdan que se les pidió documentar.',
    'Se van con una despedida y un reconocimiento. En agosto nadie sabe por qué el proceso nocturno corre en ese orden.'),
-  c('Mapear qué depende del sistema viejo.','bajo','baritono','fundamento',
+  c('Averiguar qué deja de funcionar si se apaga el sistema viejo, incluido lo que no está en ningún inventario.','bajo','baritono','fundamento',
    'Treinta y uno más dos que no estaban en el inventario: embargos judiciales y una fiduciaria.',
    'Veintinueve mapeados, dos descubiertos en prueba integrada.',
    'El banco se entera del proceso de embargos por un juzgado.'),
-  c('El fin de semana de corte.','mezzo','soprano','agilidad',
+  c('El fin de semana del cambio: algo falla a mitad de la noche y hay que decidir en minutos.','mezzo','soprano','agilidad',
    'Falla una carga a las 4 a.m., ruta alterna en cuarenta minutos, el lunes nadie afuera se entera.',
    'Reversión limpia. El siguiente fin de semana disponible es en once meses.',
    'Cuatro millones de saldos sin cuadrar el lunes.')],
  5:[
-  c('Fijar un lenguaje común entre las cuatro partes.','baritono','contralto','tesitura',
+  c('Lograr que las cuatro partes usen las mismas palabras para las mismas cosas antes de construir nada.','baritono','contralto','tesitura',
    'Once términos que significan lo mismo para todos.',
    'Precisión técnica sin traducción al negocio.',
    'Una definición de saldo disponible que nadie compartía.'),
-  c('Mapear qué depende del sistema viejo.','bajo','baritono','fundamento',
+  c('Averiguar qué deja de funcionar si se apaga el sistema viejo, incluido lo que no está en ningún inventario.','bajo','baritono','fundamento',
    'Treinta y tres dependencias, dos de ellas fuera de todo inventario.',
    'Veintinueve, con las dos faltantes apareciendo en prueba.',
    'Un juzgado avisa antes que el sistema.'),
-  c('Los que saben cómo funciona el sistema viejo se están yendo.','contralto','mezzo','escucha',
+  c('Sacarles a los que se jubilan lo que saben y que no está escrito en ninguna parte.','contralto','mezzo','escucha',
    'La documentación describe el sistema de 2011. Nueve semanas sentados con ellos, sin agenda.',
    'Documentan lo que se les pidió documentar.',
    'En agosto nadie sabe por qué el proceso nocturno corre en ese orden.'),
-  c('El presupuesto se agota en el mes ocho de doce y hay que sostenerlo ante la junta.','soprano','tenor','proyeccion',
+  c('La plata se acabó en el mes ocho de doce y hay que convencer a la junta de poner más, sin nada terminado que mostrar.','soprano','tenor','proyeccion',
    'Se plantea qué banco existe al otro lado de la migración, con fecha y con cifra. La junta aprueba la ampliación sabiendo exactamente qué está comprando.',
    'Se presenta el sobrecosto con su justificación técnica. La junta aprueba y pide informes mensuales.',
    'Se recorta el alcance para caber en el presupuesto. Lo que se recorta es la migración de los dos sistemas que nadie recordaba.'),
-  c('El fin de semana de corte.','mezzo','tenor','agilidad',
+  c('El fin de semana del cambio: algo falla a mitad de la noche y hay que decidir en minutos.','mezzo','tenor','agilidad',
    'Ruta alterna a las 4:40 de la mañana del domingo.',
    'Reversión limpia, once meses de espera.',
    'Lunes con cuatro millones de saldos descuadrados.')]}},
 
 {id:'quejas',nombre:'Patrón de quejas',titulo:'Lo que dicen cuando cuelgan',ejeD:'escucha',ejeS:'fundamento',
- sit:'El indicador de satisfacción del canal telefónico lleva once meses en verde. La semana pasada, tres asesores distintos de tres ciudades distintas comentaron, cada uno por su lado y sin darle importancia, que los clientes de un producto específico cuelgan antes de que termine la encuesta. Nadie lo reportó. Alguien lo mencionó en un almuerzo.',
+ sit:'Hace once meses que la encuesta del call center da resultados excelentes, y el área lo celebra en cada informe. La semana pasada, tres asesores de tres ciudades distintas comentaron por separado que los clientes de un producto cuelgan antes de que la encuesta termine. Ninguno lo reportó: les pareció un detalle. Si los que cuelgan son justamente los que están molestos, el indicador lleva casi un año midiendo paciencia y no satisfacción, y todas las decisiones tomadas con ese número se tomaron sobre un espejismo. Nadie ha hecho nada. Alguien lo mencionó en un almuerzo.',
  v:{
  3:[
-  c('Decidir qué se hace con un comentario de almuerzo.','contralto','bajo','escucha',
+  c('Decidir qué se hace con un comentario suelto de almuerzo que puede no ser nada o puede ser once meses de decisiones mal tomadas.','contralto','bajo','escucha',
    'Alguien pide los audios completos, no los resúmenes. Aparece un patrón: la encuesta no mide la llamada, mide si el cliente tuvo paciencia para llegar al final. Los que cuelgan son los que más tenían que decir.',
    'Se revisan los históricos del producto y algo no cuadra en las cifras de retención. Se abre una revisión formal. Tomará seis semanas.',
    'El comentario queda en el almuerzo. El indicador sigue en verde y en el reporte del trimestre el canal telefónico es la buena noticia.'),
-  c('Llevarlo a un comité que lleva once meses celebrando el verde.','tenor','soprano','proyeccion',
+  c('Llevarle la mala noticia a un comité que lleva once meses celebrando ese indicador en cada reunión.','tenor','soprano','proyeccion',
    'Se presenta el martes, sin esperar el estudio completo, y se pide autorización para intervenir antes del cierre de mes. Incomoda. Avanza.',
    'Se presenta dentro de una propuesta amplia de rediseño del canal. El comité aprueba y le asigna cronograma anual.',
    'El hallazgo circula por correo entre tres personas que están de acuerdo. En marzo aparece como queja ante la Superintendencia.'),
-  c('Intervenir el producto sin desarmar lo que ya funciona.','bajo','baritono','fundamento',
+  c('Arreglar el punto exacto del proceso que hace colgar a la gente, sin romper los otros ocho productos que pasan por ahí.','bajo','baritono','fundamento',
    'Se identifica qué parte del flujo genera el abandono y qué depende de esa parte. El ajuste toca dos sistemas y ninguno de los otros ocho. Catorce días sin tumbar nada.',
    'Se rediseña el flujo completo. Funciona. Se rompen dos integraciones que nadie sabía que existían.',
    'Se interviene sin mapa. El abandono baja y los reclamos de un producto vecino suben treinta por ciento sin que nadie relacione las dos cosas hasta agosto.')],
  4:[
-  c('Decidir qué se hace con un comentario de almuerzo.','contralto','mezzo','escucha',
+  c('Decidir qué se hace con un comentario suelto de almuerzo que puede ser once meses de decisiones mal tomadas.','contralto','mezzo','escucha',
    'Los audios completos, no los resúmenes. Los que cuelgan son los que más tenían que decir.',
    'Revisión formal de históricos. Seis semanas.',
    'El canal telefónico sigue siendo la buena noticia del trimestre.'),
-  c('Llevarlo a un comité que lleva once meses celebrando el verde.','tenor','soprano','proyeccion',
+  c('Llevarle la mala noticia a un comité que lleva once meses celebrando ese indicador.','tenor','soprano','proyeccion',
    'Martes, sin estudio completo, con autorización pedida.',
    'Aprobado como propuesta anual.',
    'Marzo, Superintendencia.'),
-  c('Intervenir sin desarmar lo que funciona.','bajo','contralto','fundamento',
+  c('Arreglar el punto exacto que hace colgar a la gente, sin romper los otros ocho productos que pasan por ahí.','bajo','contralto','fundamento',
    'Dos sistemas tocados, catorce días, nada tumbado.',
    'Rediseño completo y dos integraciones rotas sobre la marcha.',
    'Los reclamos del producto vecino suben treinta por ciento.'),
-  c('Que ochocientos asesores sepan qué cambió y por qué.','baritono','soprano','tesitura',
+  c('Hacer que ochocientos asesores entiendan qué cambió y por qué, para que vuelvan a reportar lo que noten.','baritono','soprano','tesitura',
    'El asesor recibe la razón del cambio, no solo el cambio. Empieza a reportar por su cuenta otras dos cosas que llevaba meses notando.',
    'Sale una guía operativa impecable. Se cumple. Nadie reporta nada nuevo.',
    'El flujo cambia sin aviso. Los asesores lo descubren en llamada, con el cliente adelante.')],
  5:[
-  c('Decidir qué se hace con un comentario de almuerzo.','contralto','bajo','escucha',
+  c('Decidir qué se hace con un comentario suelto de almuerzo que puede ser once meses de decisiones mal tomadas.','contralto','bajo','escucha',
    'Audios completos. Los que cuelgan son los que más tenían que decir.',
    'Revisión formal, seis semanas.',
    'El indicador sigue en verde.'),
-  c('Llevarlo a un comité que lleva once meses celebrando el verde.','tenor','mezzo','proyeccion',
+  c('Llevarle la mala noticia a un comité que lleva once meses celebrando ese indicador.','tenor','mezzo','proyeccion',
    'Martes, incompleto, autorizado.',
    'Cronograma anual.',
    'Superintendencia en marzo.'),
-  c('Intervenir sin desarmar lo que funciona.','bajo','baritono','fundamento',
+  c('Arreglar el punto exacto que hace colgar a la gente, sin romper los otros ocho productos que pasan por ahí.','bajo','baritono','fundamento',
    'Dos sistemas, catorce días.',
    'Dos integraciones rotas y reparadas.',
    'El producto vecino paga la cuenta.'),
-  c('A mitad del ajuste, un medio publica el caso de una clienta.','mezzo','tenor','agilidad',
+  c('A mitad del arreglo, un periódico publica el caso de una clienta y hay que responder hoy.','mezzo','tenor','agilidad',
    'La clienta tiene respuesta antes de que el artículo cumpla seis horas, y el ajuste ya estaba en curso, lo cual se puede demostrar con fechas. La nota se apaga sola.',
    'Se responde bien y al día siguiente. Dos réplicas más y luego silencio.',
    'Se responde con un comunicado sobre el compromiso con el cliente. La clienta lo cita en televisión.'),
-  c('Que ochocientos asesores sepan qué cambió y por qué.','baritono','contralto','tesitura',
+  c('Hacer que ochocientos asesores entiendan qué cambió y por qué, para que vuelvan a reportar lo que noten.','baritono','contralto','tesitura',
    'El asesor recibe la razón y empieza a reportar por su cuenta otras dos cosas.',
    'Guía impecable, cumplimiento total, cero reportes nuevos.',
    'Lo descubren en llamada, con el cliente adelante.')]}},
 
 {id:'brecha',nombre:'Brecha activa',titulo:'Cuarenta minutos de otra clase',ejeD:'agilidad',ejeS:'proyeccion',
- sit:'3:40 de la madrugada. Un proveedor externo reporta actividad anómala en un servicio que expone datos de identificación de clientes de crédito de consumo. No hay confirmación de extracción. No hay confirmación de que no la haya. El servicio está activo y procesando. Apagarlo deja sin operar el canal digital de dos millones de personas cuando amanezca.',
+ sit:'Tres y cuarenta de la madrugada. Una empresa externa avisa que alguien está entrando sin permiso a un sistema del banco donde están los datos personales de los clientes de crédito. No se sabe si alcanzaron a copiar algo, y tampoco se sabe que no. El sistema sigue prendido y funcionando. Apagarlo corta el riesgo y deja sin app ni página web a dos millones de personas cuando amanezca. Dejarlo prendido mantiene el servicio y también la puerta abierta. El regulador exige que le avisen pronto, y todavía no hay casi nada que contarle. Adentro del banco hay ochocientas personas que van a despertarse en tres horas.',
  v:{
  3:[
-  c('Decidir si se apaga.','mezzo','tenor','agilidad',
+  c('Decidir en minutos si se apaga el sistema, sabiendo que apagarlo deja sin servicio a dos millones de personas al amanecer.','mezzo','tenor','agilidad',
    'Se aísla el servicio sin apagar el canal: tráfico desviado a una ruta degradada en once minutos. Los clientes verán lentitud. No verán una caída.',
    'Se apaga. Es correcto y llega completo: el canal cae a las 3:52 y el equipo trabaja con un reloj público encima.',
    'Se convoca a un comité que se reúne a las 5:10. El servicio operó ochenta minutos más.'),
-  c('Saber qué se llevaron, si se llevaron algo.','contralto','bajo','escucha',
+  c('Averiguar qué alcanzaron a llevarse, sin confiar solo en lo que reportó el proveedor.','contralto','bajo','escucha',
    'Alguien nota que los registros del proveedor y los propios no coinciden en la línea de tiempo. La discrepancia señala un segundo punto de entrada.',
    'Se reconstruye desde los logs internos, completo hasta donde llega el registro, y el registro empieza el martes.',
    'Se asume el alcance que reportó el proveedor. En abril aparece un segundo incidente que resulta ser el mismo, todavía abierto.'),
-  c('Decírselo al regulador y a la junta antes del amanecer.','soprano','tenor','proyeccion',
+  c('Contarle al regulador y a la junta, antes del amanecer, algo que todavía está incompleto.','soprano','tenor','proyeccion',
    'Se notifica a las 6:15 con lo que hay: qué pasó, qué no se sabe todavía, qué se está haciendo. La incertidumbre se comunica como incertidumbre.',
    'Se notifica a las 6:15 con un mensaje que suena más resuelto de lo que la situación permite. Nadie miente. A las once hay que corregir dos cosas.',
    'Se espera el cuadro completo. La notificación sale a las 4 de la tarde y la conversación con el regulador ya no es sobre la brecha.')],
  4:[
-  c('Decidir si se apaga.','mezzo','baritono','agilidad',
+  c('Decidir en minutos si se apaga, sabiendo lo que cuesta apagar.','mezzo','baritono','agilidad',
    'Aislamiento sin caída, once minutos, lentitud en lugar de apagón.',
    'Se apaga a las 3:52 con reloj público.',
    'Comité a las 5:10, ochenta minutos de operación adicional.'),
-  c('Saber qué se llevaron.','contralto','mezzo','escucha',
+  c('Averiguar qué alcanzaron a llevarse, sin confiar solo en lo que reportó el proveedor.','contralto','mezzo','escucha',
    'La discrepancia entre registros señala un segundo punto de entrada.',
    'Reconstrucción completa hasta el martes, que es donde empieza el registro.',
    'El mismo incidente reaparece en abril, todavía abierto.'),
-  c('Notificar antes del amanecer.','soprano','tenor','proyeccion',
+  c('Contarle al regulador algo incompleto antes del amanecer, en lugar de esperar a tenerlo todo.','soprano','tenor','proyeccion',
    '6:15, con la incertidumbre comunicada como incertidumbre.',
    '6:15, con dos correcciones a las once.',
    '4 de la tarde, y la conversación ya es otra.'),
-  c('Restablecer sin reabrir lo que se cerró.','bajo','baritono','fundamento',
+  c('Volver a prender el sistema sin dejar abierta la misma puerta ni contagiar a los que dependen de él.','bajo','baritono','fundamento',
    'Restablecimiento por capas, dependencias verificadas una a una, servicio arriba a las 9:40 sin arrastrar la vulnerabilidad.',
    'Restablecimiento completo tras el parche. Tres días después aparece un servicio satélite con la configuración anterior.',
    'Se reabre lo mismo que se cerró. El segundo incidente ocurre el viernes.')],
  5:[
-  c('Decidir si se apaga.','mezzo','tenor','agilidad',
+  c('Decidir en minutos si se apaga, sabiendo que apagar deja sin servicio a dos millones de personas.','mezzo','tenor','agilidad',
    'Once minutos, ruta degradada, lentitud en lugar de caída.',
    'Apagón a las 3:52.',
    'Comité a las 5:10.'),
-  c('Saber qué se llevaron.','contralto','bajo','escucha',
+  c('Averiguar qué alcanzaron a llevarse, sin confiar solo en lo que reportó el proveedor.','contralto','bajo','escucha',
    'Segundo punto de entrada, detectado por una discrepancia de minutos.',
    'Registro completo desde el martes.',
    'Abril.'),
-  c('Notificar al regulador y a la junta antes del amanecer.','soprano','tenor','proyeccion',
+  c('Contarle al regulador y a la junta algo incompleto antes del amanecer.','soprano','tenor','proyeccion',
    '6:15, incertidumbre nombrada.',
    '6:15, dos correcciones a las once.',
    '4 de la tarde.'),
-  c('Restablecer sin reabrir lo que se cerró.','bajo','baritono','fundamento',
+  c('Volver a prender el sistema sin dejar abierta la misma puerta.','bajo','baritono','fundamento',
    'Por capas, 9:40, sin arrastre.',
    'Un satélite con la configuración vieja, tres días después.',
    'Viernes.'),
-  c('Adentro hay ochocientas personas que se enteraron por el chat.','baritono','contralto','tesitura',
+  c('Ochocientas personas adentro del banco se enteraron por el chat. Hay que contarles lo mismo a áreas que necesitan cosas distintas.','baritono','contralto','tesitura',
    'El relato le llega a cada área en su idioma: comercial sabe qué responderle a un cliente, riesgo sabe qué documentar, tecnología sabe qué se decidió y por qué. Una versión, seis traducciones.',
    'Comunicado interno correcto y general. Comercial improvisa dos días.',
    'La versión que circula es la del chat, y en la del chat sí hubo robo de datos.')]}},
 
 {id:'regulatorio',nombre:'Hallazgo regulatorio',titulo:'Lo que da plata',ejeD:'fundamento',ejeS:'proyeccion',
- sit:'Auditoría interna encuentra que el seguro asociado a la tarjeta de crédito se activó, en un porcentaje no determinado de casos, con un consentimiento que no cumple lo que exige la norma vigente desde 2023. Ciento noventa mil clientes lo tienen. El producto aporta el catorce por ciento del margen del segmento. Nadie afuera lo ha notado.',
+ sit:'Auditoría descubrió que un seguro que se cobra junto con la tarjeta de crédito se les activó a los clientes sin el consentimiento que exige la ley. No se sabe a cuántos: podrían ser veinte mil o podrían ser ciento noventa mil, que son todos los que lo tienen. El producto deja el catorce por ciento de las ganancias del área, así que corregirlo cuesta plata de verdad y el que lo levante va a arruinarle el trimestre a varias personas. Del otro lado hay clientes a los que se les está descontando algo que no pidieron. Nadie afuera se ha dado cuenta todavía, y esa es exactamente la parte incómoda.',
  v:{
  3:[
-  c('Establecer de cuántos clientes se está hablando.','bajo','contralto','fundamento',
+  c('Averiguar a cuántos clientes les pasó de verdad, antes de que la cifra grande se instale sola en una presentación.','bajo','contralto','fundamento',
    'Se rastrea la trazabilidad hasta el canal de venta y aparece el corte exacto: veintiséis mil casos, todos de un mismo flujo de venta telefónica entre marzo y noviembre de 2024. El resto está limpio.',
    'Se determina que el problema existe y se acota a la venta telefónica. La cifra exacta llega en cinco semanas.',
    'Se habla de «ciento noventa mil clientes potencialmente afectados». El número entra en un correo y de ahí a una presentación, y ya nadie lo baja.'),
-  c('Decirlo arriba, sabiendo que cuesta catorce por ciento del margen.','tenor','soprano','proyeccion',
+  c('Decírselo al comité sabiendo que cuesta el catorce por ciento de las ganancias del área y que nadie afuera lo ha notado.','tenor','soprano','proyeccion',
    'Se lleva al comité de auditoría con el número acotado y una propuesta de remediación. Se aprueba devolver antes de que nadie lo pida.',
    'Se lleva al comité con el hallazgo y sin propuesta. Se abre una mesa de trabajo que sesiona seis veces.',
    'El hallazgo queda en el informe de auditoría, con su calificación y su plan de acción a doce meses. En el mes nueve llega un requerimiento externo.'),
-  c('Desmontar el cobro sin romper lo que sí está bien vendido.','baritono','bajo','tesitura',
+  c('Quitarle el cobro a los afectados sin quitárselo a los ciento sesenta mil que sí lo pidieron y lo quieren.','baritono','bajo','tesitura',
    'Se desactiva el cobro solo para el flujo afectado, con una comunicación distinta para cada canal y un libreto para la oficina. Los otros ciento sesenta y cuatro mil no se enteran de nada.',
    'Se desactiva para todos mientras se depura. Se recupera en dos meses. El margen del trimestre cae más de lo necesario.',
    'Se desactiva sin distinguir y sin avisar. Cuarenta mil clientes que sí querían el seguro descubren que no lo tienen cuando lo necesitan.')],
  4:[
-  c('Establecer de cuántos clientes se está hablando.','bajo','baritono','fundamento',
+  c('Averiguar a cuántos clientes les pasó de verdad, antes de que la cifra grande se instale sola.','bajo','baritono','fundamento',
    'Veintiséis mil casos, un solo flujo, marzo a noviembre de 2024.',
    'Acotado a venta telefónica, cifra exacta en cinco semanas.',
    '«Ciento noventa mil potencialmente afectados» queda instalado en una presentación.'),
-  c('Los clientes que no sabían que lo tenían.','contralto','mezzo','escucha',
+  c('Escuchar las llamadas de venta originales para entender qué entendió el cliente, más allá de lo que exige la norma.','contralto','mezzo','escucha',
    'Se escuchan cuarenta llamadas de la venta original. En treinta y una el cliente pregunta qué es eso que le están cobrando y la respuesta cambia de tema. Eso define la remediación mejor que la norma.',
    'Se revisa la muestra estadística requerida y se confirma el incumplimiento formal.',
    'Se remedia según lo que exige la norma. Once mil clientes reciben una devolución que no entienden y llaman a preguntar.'),
-  c('Decirlo arriba sabiendo lo que cuesta.','tenor','soprano','proyeccion',
+  c('Decírselo al comité sabiendo lo que cuesta y que nadie afuera lo ha notado.','tenor','soprano','proyeccion',
    'Comité de auditoría, número acotado, propuesta de devolución antes de que nadie la pida.',
    'Hallazgo sin propuesta, mesa de trabajo con seis sesiones.',
    'Plan de acción a doce meses y un requerimiento externo en el mes nueve.'),
-  c('Desmontar sin romper lo que sí está bien vendido.','baritono','contralto','tesitura',
+  c('Quitarle el cobro a los afectados sin quitárselo a los que sí lo pidieron.','baritono','contralto','tesitura',
    'Solo el flujo afectado, un libreto por canal, ciento sesenta y cuatro mil clientes sin enterarse.',
    'Desactivación total y recuperación en dos meses.',
    'Cuarenta mil que sí querían el seguro se enteran cuando lo necesitan.')],
  5:[
-  c('Establecer de cuántos clientes se está hablando.','bajo','contralto','fundamento',
+  c('Averiguar a cuántos clientes les pasó de verdad, antes de que la cifra grande se instale sola.','bajo','contralto','fundamento',
    'Veintiséis mil, un flujo, nueve meses.',
    'Acotado al canal, cifra en cinco semanas.',
    'El número grande se instala solo.'),
-  c('Los clientes que no sabían que lo tenían.','contralto','bajo','escucha',
+  c('Escuchar las llamadas de venta para entender qué entendió el cliente, más allá de lo que exige la norma.','contralto','bajo','escucha',
    'Treinta y una de cuarenta llamadas: el cliente pregunta y la respuesta cambia de tema.',
    'Muestra estadística, incumplimiento formal confirmado.',
    'Once mil devoluciones que nadie entiende.'),
-  c('Decirlo arriba sabiendo lo que cuesta.','tenor','mezzo','proyeccion',
+  c('Decírselo al comité sabiendo lo que cuesta y que nadie afuera lo ha notado.','tenor','mezzo','proyeccion',
    'Propuesta de devolución antes de que la pidan.',
    'Mesa de trabajo, seis sesiones.',
    'Requerimiento externo en el mes nueve.'),
-  c('El regulador se adelanta y pide información en cuarenta y ocho horas.','mezzo','baritono','agilidad',
+  c('El regulador se entera por su cuenta y pide toda la información en cuarenta y ocho horas.','mezzo','baritono','agilidad',
    'Se entrega en treinta y seis horas con lo que hay, incluida la parte que todavía no cuadra, señalada como tal. El regulador ve un banco que ya estaba trabajando.',
    'Se pide prórroga y se entrega impecable el día ocho. Correcto y leído como demora.',
    'Se entrega a las cuarenta y ocho horas un documento incompleto que no dice que está incompleto. La segunda pregunta es sobre eso.'),
-  c('Desmontar sin romper lo que sí está bien vendido.','baritono','soprano','tesitura',
+  c('Quitarle el cobro a los afectados sin quitárselo a los que sí lo pidieron.','baritono','soprano','tesitura',
    'Un libreto por canal, el resto de clientes intacto.',
    'Desactivación total, dos meses de recuperación.',
    'Cuarenta mil clientes descubren la ausencia del seguro en el peor momento.')]}},
 
 {id:'duplicidad',nombre:'Dos áreas iguales',titulo:'El mismo modelo con dos nombres',ejeD:'escucha',ejeS:'tesitura',
- sit:'La vicepresidencia de riesgo tiene un equipo de analítica de veintiocho personas. La vicepresidencia digital tiene uno de treinta y dos. Un proveedor menciona, de pasada, que le vendió la misma licencia dos veces al mismo banco. Al revisar, los dos equipos construyeron modelos de propensión sobre las mismas bases, con métricas distintas, y ninguno sabía del otro. Sesenta personas. Nadie hizo nada mal.',
+ sit:'Un proveedor comenta al pasar que le vendió la misma licencia dos veces al mismo banco. Al revisar aparece esto: dos equipos de analítica, sesenta personas entre los dos, en vicepresidencias distintas, llevan dos años construyendo modelos casi idénticos sobre los mismos datos, con nombres y métricas diferentes. Nadie hizo nada mal. Nadie ocultó nada. Ninguno de los dos supo que el otro existía. Ahora hay que decidir qué se hace, y cualquier cosa que se haga va a sonarle a sesenta personas como que la mitad sobra.',
  v:{
  3:[
-  c('Entender por qué ninguno de los dos supo del otro durante dos años.','contralto','bajo','escucha',
+  c('Entender cómo dos equipos del mismo banco trabajaron dos años sin enterarse el uno del otro.','contralto','bajo','escucha',
    'Aparecen dos conversaciones que sí ocurrieron, en 2023, y que terminaron sin decisión porque cada área entendió que la otra estaba haciendo algo distinto. El problema no fue el silencio, fue el vocabulario.',
    'Se documenta la duplicidad con precisión: qué modelo, qué base, qué costo. La causa queda sin explicar.',
    'Se asume que hubo falta de comunicación y se propone un comité de coordinación. El comité se crea y sesiona mensualmente durante un año.'),
-  c('Hacer que dos equipos que hablan distinto puedan trabajar juntos.','baritono','soprano','tesitura',
+  c('Hacer que dos equipos que llaman distinto a lo mismo puedan por fin comparar su trabajo.','baritono','soprano','tesitura',
    'Se define un catálogo único de variables y una sola definición de propensión. Los dos equipos siguen separados y por primera vez sus resultados se pueden comparar.',
    'Se fusionan bajo una sola jefatura. Funciona en el organigrama. Los primeros cuatro meses se van en discutir qué métrica se queda.',
    'Se pide colaboración y buena voluntad. Cada equipo colabora con su definición.'),
-  c('Contarle a la organización que sesenta personas hicieron lo mismo dos veces.','soprano','tenor','proyeccion',
+  c('Contarle esto a la organización sin que sesenta personas entiendan que están anunciando un recorte.','soprano','tenor','proyeccion',
    'Se plantea hacia adelante, con una cifra de lo que se libera y una lista de tres cosas que nadie estaba haciendo y ahora sí. Nadie sale humillado y nadie sale ileso.',
    'Se comunica el ahorro. Correcto, frío, y los sesenta lo leen como el anuncio de un recorte.',
    'No se comunica nada. La versión que circula es que van a despedir a un equipo entero, y nueve personas renuncian antes de que se decida nada.')],
  4:[
-  c('Entender por qué ninguno supo del otro durante dos años.','contralto','mezzo','escucha',
+  c('Entender cómo dos equipos del mismo banco trabajaron dos años sin enterarse el uno del otro.','contralto','mezzo','escucha',
    'Dos conversaciones de 2023 que terminaron sin decisión por vocabulario, no por silencio.',
    'Duplicidad documentada, causa sin explicar.',
    'Un comité de coordinación que sesiona un año.'),
-  c('Establecer qué depende hoy de cada uno de los dos modelos.','bajo','baritono','fundamento',
+  c('Averiguar qué cosas del banco están funcionando hoy gracias a cada uno de los dos modelos, antes de apagar alguno.','bajo','baritono','fundamento',
    'El modelo de riesgo alimenta la política de originación y el de digital alimenta cuatro campañas activas. Apagar cualquiera de los dos tiene un costo que ahora se conoce antes de decidir.',
    'Se identifican las dependencias principales. Dos campañas menores se descubren después.',
    'Se apaga uno de los dos por eficiencia. Tres semanas después nadie sabe por qué cayó la conversión de un canal.'),
-  c('Hacer que dos equipos que hablan distinto puedan trabajar juntos.','baritono','contralto','tesitura',
+  c('Hacer que dos equipos que llaman distinto a lo mismo puedan comparar su trabajo.','baritono','contralto','tesitura',
    'Catálogo único de variables, una definición de propensión, dos equipos que por fin se pueden comparar.',
    'Fusión bajo una jefatura y cuatro meses discutiendo métricas.',
    'Cada equipo colabora con su definición.'),
@@ -730,19 +779,19 @@ const AMBITOS = [
    'Se comunica el ahorro y se lee como recorte.',
    'Nueve renuncias antes de que se decida nada.')],
  5:[
-  c('Entender por qué ninguno supo del otro durante dos años.','contralto','bajo','escucha',
+  c('Entender cómo dos equipos del mismo banco trabajaron dos años sin enterarse el uno del otro.','contralto','bajo','escucha',
    'El problema fue el vocabulario y no el silencio.',
    'Duplicidad documentada sin causa.',
    'Un comité mensual durante un año.'),
-  c('Establecer qué depende hoy de cada modelo.','bajo','contralto','fundamento',
+  c('Averiguar qué está funcionando hoy gracias a cada uno de los dos modelos, antes de apagar alguno.','bajo','contralto','fundamento',
    'Política de originación de un lado, cuatro campañas activas del otro, costo conocido antes de decidir.',
    'Dependencias principales mapeadas, dos campañas menores por fuera.',
    'Cae la conversión de un canal y nadie sabe por qué.'),
-  c('Hacer que dos equipos que hablan distinto trabajen juntos.','baritono','soprano','tesitura',
+  c('Hacer que dos equipos que llaman distinto a lo mismo puedan trabajar juntos.','baritono','soprano','tesitura',
    'Catálogo único, resultados comparables por primera vez.',
    'Fusión y cuatro meses de discusión metodológica.',
    'Colaboración con definiciones incompatibles.'),
-  c('El líder de uno de los dos equipos renuncia y once personas hablan de seguirlo.','mezzo','tenor','agilidad',
+  c('El jefe de uno de los equipos renuncia y once personas hablan de irse con él. Hay una semana.','mezzo','tenor','agilidad',
    'Se redistribuye el trabajo crítico en cuatro días y se habla con los once, uno por uno, antes del viernes. Se van dos.',
    'Se abre un proceso de retención con contraofertas. Se quedan siete y la conversación sobre por qué se querían ir no ocurre.',
    'Se procesa la renuncia y se abre la vacante. En seis semanas se han ido nueve y dos modelos quedan sin dueño.'),
@@ -752,56 +801,56 @@ const AMBITOS = [
    'La versión del pasillo gana.')]}},
 
 {id:'discontinuar',nombre:'Discontinuar un producto',titulo:'Lo que alguien construyó',ejeD:'proyeccion',ejeS:'fundamento',
- sit:'La cuenta de ahorro programado para jóvenes tiene cuarenta mil clientes activos, un costo operativo que supera el ingreso en cada uno de los últimos siete trimestres, y un equipo de doce personas que la construyó desde cero hace cuatro años y la considera lo mejor que ha hecho. La decisión de cerrarla no está tomada. Está en la agenda del jueves.',
+ sit:'Hace cuatro años, doce personas construyeron desde cero una cuenta de ahorro para jóvenes. Hoy la usan cuarenta mil clientes y hace siete trimestres seguidos que cuesta más operarla de lo que deja. El jueves hay que decidir si se cierra. Cerrarla toca a cuarenta mil personas que pusieron su ahorro ahí, muchas con su primer producto financiero, y a doce que consideran ese producto lo mejor que han hecho en su carrera. No cerrarla mantiene una pérdida que está pagando otra área. La decisión todavía no está tomada: está en la agenda del jueves.',
  v:{
  3:[
-  c('Saber qué cuesta realmente, incluido lo que no está en el estado de resultados.','bajo','contralto','fundamento',
+  c('Averiguar qué cuesta y qué deja de verdad, incluido lo que no aparece en el reporte de ingresos.','bajo','contralto','fundamento',
    'Aparece que catorce mil de los cuarenta mil abrieron después un producto rentable, y que el costo se concentra en un proceso manual de conciliación que se puede automatizar. El producto no era el problema.',
    'Se calcula el costo total con precisión, incluida la carga operativa oculta. La cifra es peor de lo que decía el reporte.',
    'Se decide con el margen directo. Se cierra un producto que era la puerta de entrada de un segmento entero, y eso se descubre en la revisión de originación del año siguiente.'),
-  c('Sostener la decisión frente a quienes la construyeron.','soprano','tenor','proyeccion',
+  c('Darle la cara a las doce personas que lo construyeron y decirles por qué se cierra.','soprano','tenor','proyeccion',
    'Se dice el jueves, en persona, con la razón completa y sin adornarla. Se nombra qué sigue para las doce personas antes de que ellas pregunten.',
    'Se comunica por el canal formal, con respeto y con los datos. Las doce personas se enteran el mismo día que los cuarenta mil clientes.',
    'La decisión se filtra antes de anunciarse. El equipo se entera por un correo dirigido a otra área.'),
-  c('Oír lo que el equipo sabe y nadie preguntó.','contralto','mezzo','escucha',
+  c('Sacarle al equipo lo que sabe de esos clientes y que no está en ningún documento, antes de que se disuelva.','contralto','mezzo','escucha',
    'Alguien se sienta con las doce personas sin agenda. Sale de ahí con dos cosas que el producto resolvía y que ningún otro resuelve, y con el nombre de la clienta que hay que llamar primero.',
    'Se hace una sesión de cierre estructurada, con lecciones aprendidas documentadas. Se documenta lo que se preguntó.',
    'El equipo se disuelve con un reconocimiento. Dieciocho meses después, otra área construye algo muy parecido sin saber que ya existió.')],
  4:[
-  c('Saber qué cuesta realmente.','bajo','baritono','fundamento',
+  c('Averiguar qué cuesta y qué deja de verdad, incluido lo que no aparece en el reporte.','bajo','baritono','fundamento',
    'Catorce mil migraron a un producto rentable, el costo está en una conciliación manual automatizable. El producto no era el problema.',
    'Costo total calculado con precisión y peor de lo reportado.',
    'Se cierra la puerta de entrada de un segmento entero.'),
-  c('Oír lo que el equipo sabe y nadie preguntó.','contralto','bajo','escucha',
+  c('Sacarle al equipo lo que sabe de esos clientes y que no está en ningún documento.','contralto','bajo','escucha',
    'Dos cosas que el producto resolvía y ningún otro resuelve, más el nombre de la clienta que hay que llamar primero.',
    'Sesión de cierre estructurada que documenta lo que se preguntó.',
    'Otra área construye lo mismo dieciocho meses después.'),
-  c('Sostener la decisión frente a quienes la construyeron.','soprano','tenor','proyeccion',
+  c('Darle la cara a las doce personas que lo construyeron y decirles por qué se cierra.','soprano','tenor','proyeccion',
    'El jueves, en persona, con lo que sigue para las doce personas ya nombrado.',
    'Canal formal, respeto, datos, y el equipo enterándose el mismo día que los clientes.',
    'Se filtra antes de anunciarse.'),
-  c('Mover cuarenta mil clientes a otro lugar sin que se sienta como un abandono.','baritono','contralto','tesitura',
+  c('Mover a cuarenta mil clientes a otro producto: al joven de veintidós y al padre que le abrió la cuenta hay que decirles cosas distintas.','baritono','contralto','tesitura',
    'El mensaje al cliente de veintidós años no se parece al que recibe el padre que abrió la cuenta a nombre del hijo. Dos versiones, un solo hecho, ninguna mentira.',
    'Comunicación única, clara y bien escrita. Funciona para la mitad.',
    'Sale una carta de migración estándar. Seis mil cuentas se cierran en lugar de migrar.')],
  5:[
-  c('Saber qué cuesta realmente.','bajo','contralto','fundamento',
+  c('Averiguar qué cuesta y qué deja de verdad, incluido lo que no aparece en el reporte.','bajo','contralto','fundamento',
    'Catorce mil migraron a un producto rentable; el costo está en un proceso manual.',
    'Cifra precisa y peor de lo esperado.',
    'Se cierra la puerta de entrada de un segmento.'),
-  c('Oír lo que el equipo sabe y nadie preguntó.','contralto','mezzo','escucha',
+  c('Sacarle al equipo lo que sabe de esos clientes y que no está en ningún documento.','contralto','mezzo','escucha',
    'Dos funciones que ningún otro producto cubre, y un nombre propio para empezar.',
    'Lecciones aprendidas de lo que se preguntó.',
    'Reconstruido por otra área en dieciocho meses.'),
-  c('Sostener la decisión frente a quienes la construyeron.','soprano','tenor','proyeccion',
+  c('Darle la cara a las doce personas que lo construyeron y decirles por qué se cierra.','soprano','tenor','proyeccion',
    'En persona, el jueves, con el después ya nombrado.',
    'Enterarse el mismo día que los clientes.',
    'Un correo dirigido a otra área.'),
-  c('Dos de las doce personas renuncian el viernes y una de ellas sostiene el proceso de cierre.','mezzo','baritono','agilidad',
+  c('Dos de las doce renuncian el viernes, y una de ellas es la que sostiene el cierre. Hay que resolverlo antes del lunes.','mezzo','baritono','agilidad',
    'El proceso de cierre queda cubierto por dos personas nuevas antes del lunes, y a las que se van se les pide una cosa concreta y acotada. Las dos la hacen.',
    'Se contrata un tercero para operar el cierre. Funciona con dos semanas de curva.',
    'Se acepta la renuncia y el cierre queda a cargo de quien pueda. La migración se atrasa siete semanas.'),
-  c('Mover cuarenta mil clientes sin que se sienta como un abandono.','baritono','soprano','tesitura',
+  c('Mover a cuarenta mil clientes a otro producto, diciéndole a cada tipo de cliente lo que ese cliente necesita oír.','baritono','soprano','tesitura',
    'Dos versiones del mismo hecho, una para el joven y otra para el padre.',
    'Una sola comunicación, clara, que funciona para la mitad.',
    'Seis mil cuentas cerradas en lugar de migradas.')]}}
@@ -880,6 +929,53 @@ function comoSeLee(k){
   <button class="btn fantasma" style="margin-top:20px" onclick="cerrarHoja()">Cerrar</button>`);
 }
 
+
+/* ============ LECTURA DE LIDERAZGO POR EJE ============ */
+const LECCION={
+ fundamento:{
+  pide:'Este compás pedía que alguien supiera qué se rompe antes de mover nada.',
+  bien:'Alguien miró debajo antes de decidir. Ese trabajo no se ve en ningún indicador y es lo que evita que el arreglo de hoy sea el incidente de agosto.',
+  consejo:'Si en tu equipo nadie hace esto por instinto, vuélvelo un paso obligatorio: antes de aprobar un cambio, alguien escribe en una página de qué depende lo que se va a tocar. Una página, con nombres de sistemas y de personas.',
+  rinde:'decisiones que se pagan tarde: sistemas con muchas dependencias, cambios que sientan precedente, cifras que hay que acotar antes de moverse',
+  terreno:'situaciones donde hay que saber qué se rompe antes de mover nada'},
+ proyeccion:{
+  pide:'Este compás pedía que alguien dijera algo incómodo, delante de quien no quería oírlo.',
+  bien:'Alguien puso el cuerpo. La información salió del cuarto donde nació y llegó a donde se decide, que es la única parte que cuenta.',
+  consejo:'Cuando nadie lleva un tema arriba, casi nunca es por falta de argumentos: es porque nadie quiere ser el que lo dice. Asigna el mensajero por nombre y en la misma reunión, con fecha. Sin dueño, un hallazgo circula por correo hasta que caduca.',
+  rinde:'asuntos atascados: hallazgos que nadie sube, autorizaciones que nadie pide, anuncios difíciles que hay que dar de frente',
+  terreno:'situaciones donde alguien tiene que decir algo incómodo delante de quien no quiere oírlo'},
+ escucha:{
+  pide:'Este compás pedía averiguar qué estaba pasando de verdad, hablando con gente y no revisando reportes.',
+  bien:'Alguien se detuvo a oír antes de actuar. Por eso el problema que se resolvió fue el que había, y no el que parecía haber.',
+  consejo:'Métele a tu equipo una regla simple: antes de resolver, doce llamadas. No encuestas, no tableros — conversaciones con las personas que están adentro del problema. Casi siempre la causa aparece antes de la sexta.',
+  rinde:'problemas mal formulados: causas compartidas que parecen casos aislados, patrones que ningún reporte agrega, saberes que viven en la cabeza de tres personas',
+  terreno:'situaciones donde lo que se está resolviendo no es lo que está pasando'},
+ agilidad:{
+  pide:'Este compás tenía reloj. Pedía una decisión hoy con información incompleta.',
+  bien:'Alguien se movió antes de tener el cuadro completo, y eso conservó opciones que a las once ya no existían.',
+  consejo:'Separa en tu equipo las decisiones reversibles de las que no lo son. Las reversibles se toman rápido y con la mitad de los datos; las irreversibles se toman despacio. Casi todo el mundo hace lo contrario.',
+  rinde:'problemas con reloj: incidentes, caídas, renuncias inesperadas, ventanas que se cierran',
+  terreno:'situaciones con reloj, donde hay que decidir hoy con información incompleta'},
+ tesitura:{
+  pide:'Este compás pedía que lo mismo le llegara distinto a públicos que necesitan cosas distintas.',
+  bien:'Alguien tradujo. La decisión existió fuera de la sala donde se tomó, que es donde las decisiones se vuelven reales o se pierden.',
+  consejo:'Una comunicación única y correcta funciona para quien ya estaba enterado. Antes de mandarla, escribe la lista de públicos y pregúntate qué tiene que poder hacer cada uno el lunes con lo que reciba. Si la respuesta es la misma para todos, todavía no la pensaste.',
+  rinde:'despliegue y coordinación: bajar una decisión a la red, hacer que dos equipos que hablan distinto trabajen juntos, comunicar un cambio a públicos con intereses opuestos',
+  terreno:'situaciones donde lo mismo tiene que llegarle distinto a públicos que necesitan cosas distintas'}
+};
+const POR_QUE={
+ fundamento:{bajo:'Bajo afina aquí: su obsesión es que no se dañe lo que ya funciona, y por eso mapea dependencias antes de tocar.'},
+ escucha:{contralto:'Contralto afina aquí: vive atenta a lo que no se dijo, y encuentra la causa donde los reportes solo muestran síntomas.'},
+ agilidad:{mezzo:'Mezzo afina aquí: cambia de línea a mitad de compás y sostiene la operación mientras el plan se rearma.'},
+ tesitura:{baritono:'Barítono afina aquí: se mueve entre pisos y hace que lo mismo llegue en el idioma de cada mesa.'},
+ proyeccion:{
+  tenor:'Tenor afina aquí: entra primero, dice lo incómodo antes de tener el informe completo y con eso desatasca lo que llevaba meses quieto.',
+  soprano:'Soprano afina aquí: no solo lo dice, le da una razón. Cuando lo que está en juego es cómo lo recibe la gente, hace falta un destino y no solo un anuncio.'}
+};
+const casiFrase=n=>n===0?'y ninguno quedó siquiera casi en tono':(n===1?'y uno más quedó casi en tono':`y ${n} más quedaron casi en tono`);
+const minus=t=>t.charAt(0).toLowerCase()+t.slice(1);
+const porQue=(eje,voz)=>(POR_QUE[eje]&&POR_QUE[eje][voz])||`${VOCES[voz].n} afina aquí.`;
+
 /* ============ 0 · ENTRADA ============ */
 function entrada(){
   pinta(`<div class="aparece">
@@ -916,8 +1012,8 @@ function gabinete(modo){
 }
 
 /* ============ 2 · FICHA ============ */
-function ficha(k,modo){
-  const v=VOCES[k], consulta=modo==='consulta';
+function perfilCuerpo(k){
+  const v=VOCES[k];
   const filas=EJES.map(e=>{
     const n=v.ejes[e];
     return `<div class="lect ${n===0?'cero':''}">
@@ -926,10 +1022,7 @@ function ficha(k,modo){
         <span class="lect-e">${EJE_NOM[e]}<b>${NIVEL[n]}</b></span>
         <span class="lect-d">${EJE_DEF[e]}</span>
       </span></div>`}).join('');
-  pinta(`<div class="aparece">
-  <button class="btn fantasma" style="width:auto;padding:9px 15px;margin-bottom:20px" onclick="${consulta?"gabinete('consulta')":'gabinete()'}">← ${consulta?'Las seis voces':'El gabinete'}</button>
-  <div class="ficha-cab"><h2>${v.n}</h2><div class="sub">${esc(v.sub)}</div></div>
-
+  return `
   <div class="bloque"><span class="rotulo">Su obsesión</span>
     <p style="font-family:'Fraunces',serif;font-size:1.24rem;line-height:1.34;margin:0">${esc(v.obs)}</p></div>
 
@@ -942,12 +1035,26 @@ function ficha(k,modo){
     <div class="lectura">${filas}</div>
     <p class="pie"><strong>${EJE_NOM[v.cero]}</strong> es una pausa. En una partitura el silencio se escribe, ocupa tiempo, y no es lo mismo que no haber compuesto nada.</p></div>
 
+  <div class="bloque entra"><span class="rotulo">Cuándo te toca entrar</span>
+    <p style="font-size:.93rem;margin-bottom:9px;color:var(--tinta-suave)">Señales en un compás que llaman a esta voz. Búscalas en el enunciado antes de decidir quién entra.</p>
+    <ul class="senales">${v.busca.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+
   <div class="bloque desafina"><span class="rotulo">Cuándo desafina</span><p style="margin:0">${esc(v.desafina)}</p></div>
+
+  <div class="bloque"><span class="rotulo">Dónde rinde más</span><p style="margin:0 0 .7em">${esc(v.fuerte)}</p>
+    <span class="rotulo" style="margin-top:14px">Dónde le cuesta</span><p style="margin:0">${esc(v.dificil)}</p></div>
 
   <div class="bloque"><span class="rotulo">Con quién afina</span>
     <div class="afina-lista">${v.afina.map(x=>`<span class="chip">${x}</span>`).join('')}</div>
-    <p style="margin-top:11px">${esc(v.afinaTxt)}</p></div>
+    <p style="margin-top:11px">${esc(v.afinaTxt)}</p></div>`;
+}
 
+function ficha(k,modo){
+  const v=VOCES[k], consulta=modo==='consulta';
+  pinta(`<div class="aparece">
+  <button class="btn fantasma" style="width:auto;padding:9px 15px;margin-bottom:20px" onclick="${consulta?"gabinete('consulta')":'gabinete()'}">← ${consulta?'Las seis voces':'El gabinete'}</button>
+  <div class="ficha-cab"><h2>${v.n}</h2><div class="sub">${esc(v.sub)}</div></div>
+  ${perfilCuerpo(k)}
   ${consulta?'':`<div style="margin-top:28px"><button class="btn" onclick="confirmarVoz('${k}')">Esta es mi voz</button></div>`}
   </div>`);
 }
@@ -971,11 +1078,16 @@ function codigo(){
   <span class="rotulo">Tu voz</span>
   <div class="codigo-grande mono">${S.miCodigo}</div>
   <h3 style="margin-bottom:4px">${v.n}</h3>
-  <p style="font-style:italic;color:var(--grafito)">${esc(v.obs)}</p>
-  <div class="pauta-sep"></div>
-  <p>Dile este código a quien vaya a sostener la partitura. Dile el código, no la voz.</p>
+  <p style="font-style:italic;color:var(--grafito);margin-bottom:14px">${esc(v.sub)}</p>
+  <div class="aviso-regla" style="margin:0">
+    <p style="margin:0">Dile este código a quien vaya a sostener la partitura. <strong>Dile el código, no la voz.</strong></p>
+  </div>
   <p class="pie">No mires la pantalla de nadie. Lo que hace funcionar esto es que el coro aparezca completo, de golpe, y no armado de a poco.</p>
-  <div style="margin-top:30px">
+  <div class="pauta-sep"></div>
+  <p class="lead" style="margin-bottom:20px">Este es tu perfil completo. Tenlo abierto durante las piezas: cuando el coro discuta quién entra en cada compás, tu trabajo es reconocer si el compás te está llamando a ti.</p>
+  ${perfilCuerpo(S.miVoz)}
+  <div class="pauta-sep"></div>
+  <div style="margin-top:8px">
     <button class="btn fantasma" onclick="atrilSetup()">Sostener la partitura</button>
     <button class="btn fantasma" onclick="preguntaFinal()">El coro ya terminó</button>
   </div></div>`);
@@ -1210,12 +1322,30 @@ function resultado(){
       <div class="quien">${esc(f.quien)}</div>
       <p class="cons">${esc(f.cons)}</p>
     </div>`).join('');
+
+  const af=filas.filter(f=>f.estado==='afinado');
+  const fl=filas.filter(f=>f.estado!=='afinado');
+  let bien='';
+  if(af.length){
+    bien=`<div class="capa"><h3>Lo que afinó</h3><div class="cuerpo">`+
+      af.map(f=>`<p><span class="cf mono">Compás ${ROM[f.i]} · ${EJE_NOM[f.eje]}</span><br>${esc(LECCION[f.eje].bien)}</p>`).join('')+
+      `</div></div>`;
+  }else{
+    bien=`<div class="capa"><h3>Lo que afinó</h3><div class="cuerpo"><p>Ningún compás quedó afinado en esta pieza. Eso no significa que el coro esté mal armado: significa que este problema le pedía registros que no tenía a la mano, o que los tenía en otro lugar.</p></div></div>`;
+  }
+  const mejor=fl.length?`<div class="capa"><h3>Cómo afinar mejor</h3><div class="cuerpo">`+
+    fl.map(f=>`<p><span class="cf mono">Compás ${ROM[f.i]} · ${EJE_NOM[f.eje]}</span><br>${esc(LECCION[f.eje].pide)} ${esc(porQue(f.eje,f.afina))}</p>
+      <p class="consejo">${esc(LECCION[f.eje].consejo)}</p>`).join('')+
+    `</div></div>`:'';
+
   const ultima=S.pIdx===2;
   pinta(`<div class="aparece">
   <span class="rotulo">Cómo sonó la pieza ${ORD[S.pIdx]}</span>
   <h2 style="margin:6px 0 22px">${ambito.titulo}</h2>
   ${cuerpo}
-  <p class="pie">Aún no. Al final de las tres.</p>
+  <div class="pauta-sep"></div>
+  ${bien}${mejor}
+  <p class="pie">El balance completo de las tres piezas llega al final.</p>
   <div style="margin-top:26px"><button class="btn" onclick="${ultima?'diagnostico()':'siguientePieza()'}">${ultima?'Cómo sonó el coro':'Pieza '+ORD[S.pIdx+1]}</button></div>
   </div>`);
 }
@@ -1226,75 +1356,124 @@ function diagnostico(){
   const todas=S.hist.flatMap(h=>h.filas);
   const vocesCoro=[...new Set(S.coro.map(m=>m.voz))];
   const ausentes=ORDEN_VOCES.filter(v=>!vocesCoro.includes(v));
+  const af=todas.filter(f=>f.estado==='afinado');
+  const cas=todas.filter(f=>f.estado==='casi');
+  const ne=todas.filter(f=>f.estado==='noentro');
+  const sil=todas.filter(f=>f.estado==='silencio');
 
-  // capa 1
-  const pedidas={};
-  todas.forEach(f=>{if(ausentes.includes(f.afina)) (pedidas[f.afina]=pedidas[f.afina]||[]).push(f)});
-  const orden=Object.keys(pedidas).sort((a,b)=>pedidas[b].length-pedidas[a].length);
+  /* --- las tres piezas --- */
+  const recap=S.hist.map((h,p)=>{
+    const a=h.filas.filter(f=>f.estado==='afinado').length;
+    const flojo=h.filas.filter(f=>f.estado!=='afinado');
+    const eje=flojo.length?EJE_NOM[flojo[0].eje]:null;
+    return `<div class="recap">
+      <div class="recap-t"><span class="cf mono">Pieza ${ORD[p]}</span><span class="cf mono">${a}/${h.filas.length} afinados</span></div>
+      <div class="recap-n">${h.ambito.titulo}</div>
+      <div class="recap-d">${a===h.filas.length?'Este coro estaba hecho para este problema.':(eje?'Donde primero cedió: '+eje+'.':'')}</div>
+    </div>`}).join('');
+
+  /* --- lo que sostuvo --- */
+  const porVoz={};
+  af.forEach(f=>{const v=f.quien.split(' · ')[1]; if(v) porVoz[v]=(porVoz[v]||0)+1});
+  const rank=Object.entries(porVoz).sort((a,b)=>b[1]-a[1]);
+  const ejesAf=[...new Set(af.map(f=>f.eje))];
   let c1;
-  if(!orden.length){
-    c1=`<p>Las seis obsesiones que las tres piezas reclamaron estaban todas en la sala. Este coro no perdió nada por ausencia.</p>
-        <p>Lo que perdió — si perdió algo — lo perdió por otra razón.</p>`;
+  if(af.length){
+    c1=`<p><strong>${af.length} de ${todas.length} compases ${af.length===1?'quedó afinado':'quedaron afinados'}</strong>, ${casiFrase(cas.length)}${cas.length?': una voz que no era la ideal hizo el trabajo igual, con un costo que la organización absorbió.':'.'}</p>
+    <p>${rank.map(r=>`<strong>${r[0]}</strong> sostuvo ${r[1]}`).join(', ')}. ${rank.length>1?'Ninguna de esas voces habría podido cubrir sola lo que cubrieron entre todas.':'Ese peso lo cargó una sola voz, y eso también es un dato: un coro que depende de un registro se queda mudo el día que esa persona no está.'}</p>
+    <p>Los ejes que este coro sí supo cubrir: ${ejesAf.map(e=>EJE_NOM[e]).join(', ')}. Un equipo que los cubre rinde en ${ejesAf.map(e=>esc(LECCION[e].rinde)).join('; y en ')}.</p>`;
   }else{
-    c1=orden.slice(0,2).map(v=>{
+    c1=`<p>Ningún compás quedó afinado, ${casiFrase(cas.length)}${cas.length?', lo cual quiere decir que alguien hizo el trabajo sin ser la voz indicada':''}. Eso pasa todos los días en las organizaciones reales y tiene un costo que nadie factura: se resuelve, y se resuelve peor.</p>
+    <p>Vale la pena mirar el reparto antes de concluir nada: un coro de este tamaño no puede cubrir seis registros, y lo que aquí se ve como fracaso suele ser la forma del equipo y no la calidad de su gente.</p>`;
+  }
+
+  /* --- cómo se resolvía --- */
+  const fallos=todas.filter(f=>f.estado!=='afinado');
+  const porEje={};
+  fallos.forEach(f=>{(porEje[f.eje]=porEje[f.eje]||[]).push(f)});
+  const ordEje=Object.keys(porEje).sort((a,b)=>porEje[b].length-porEje[a].length);
+  let c2;
+  if(!fallos.length){
+    c2='<p>Los tres problemas se resolvieron con la voz que cada compás pedía. Este coro no solo tenía los registros: supo dónde ponerlos, que es la parte difícil.</p>';
+  }else{
+    c2=ordEje.slice(0,3).map(e=>{
+      const fs=porEje[e], vozIdeal=fs[0].afina;
+      const donde=fs.map(f=>`pieza ${ORD[f.pieza]}, compás ${ROM[f.i]}`).join('; ');
+      return `<p><strong style="font-family:'Fraunces',serif;font-size:1.14rem">${EJE_NOM[e]}</strong> — ${fs.length} ${fs.length===1?'compás':'compases'}</p>
+      <p>${esc(LECCION[e].pide)} ${esc(porQue(e,vozIdeal))}</p>
+      <p class="consejo">${esc(LECCION[e].consejo)}</p>
+      <p class="marca">${donde}</p>`}).join('<div class="pauta-sep"></div>');
+  }
+
+  /* --- la voz ausente --- */
+  const pedidas={};
+  todas.forEach(f=>{if(ausentes.includes(f.afina))(pedidas[f.afina]=pedidas[f.afina]||[]).push(f)});
+  const ordA=Object.keys(pedidas).sort((a,b)=>pedidas[b].length-pedidas[a].length);
+  let c3;
+  if(!ordA.length){
+    c3='<p>Todas las obsesiones que los tres problemas reclamaron estaban en la sala. Lo que este coro perdió, si perdió algo, lo perdió por asignación y no por ausencia — y eso se corrige en una conversación, no en una contratación.</p>';
+  }else{
+    c3=ordA.slice(0,2).map(v=>{
       const V=VOCES[v], fs=pedidas[v];
-      const lista=fs.map(f=>`pieza ${ORD[f.pieza]}, compás ${ROM[f.i]}`).join('; ');
       return `<p><strong style="font-family:'Fraunces',serif;font-size:1.15rem">${V.n}</strong> no estuvo. Nadie entró a la sala con esta pregunta encima: <em>${esc(V.obs).toLowerCase().replace(/\.$/,'')}</em>.</p>
       <p>${esc(V.falta)}</p>
-      <p class="marca">Reclamada en ${fs.length} ${fs.length===1?'compás':'compases'} · ${lista}</p>`}).join('<div class="pauta-sep"></div>');
+      <p>Lo que aporta: ${minus(esc(V.fuerte))}</p>
+      <p class="marca">Reclamada en ${fs.length} ${fs.length===1?'compás':'compases'}</p>`}).join('<div class="pauta-sep"></div>');
   }
 
-  // capa 2
-  const ne=todas.filter(f=>f.estado==='noentro');
-  let c2;
-  if(!ne.length){
-    c2='<p>Cada vez que este coro tuvo la voz que el compás pedía, la puso ahí. No sobró lucidez guardada en el bolsillo.</p>';
-  }else{
-    c2=ne.map(f=>{
-      const V=VOCES[f.disp];
-      const donde=S.hist[f.pieza].filas.find(g=>g.quien.split(' · ')[1]===V.n);
-      const nota=donde?`Entró en el compás ${ROM[donde.i]} de esa misma pieza.`:'Esa persona no cantó en esa pieza.';
-      const ent=f.quien.split(' · ')[1];
-      return `<p><strong>${V.n}</strong> — pieza ${ORD[f.pieza]}, compás ${ROM[f.i]}. ${esc(nota)} ${ent?'Aquí entró '+esc(ent)+'.':'Aquí no entró nadie.'}</p>`}).join('')
-      +`<p class="marca">${ne.length} ${ne.length===1?'compás':'compases'} donde el registro existía en este coro y quedó en otro lugar. Eso no es un vacío de talento.</p>`;
-  }
-
-  // capa 3
-  const af=todas.filter(f=>f.estado==='afinado');
-  const porVoz={};
-  af.forEach(f=>{const v=f.quien.split(' · ')[1]; porVoz[v]=(porVoz[v]||0)+1});
-  const ranking=Object.entries(porVoz).sort((a,b)=>b[1]-a[1]);
-  let c3;
-  if(!af.length){
-    c3='<p>Ningún compás quedó afinado. Las tres piezas pidieron registros que este coro no traía o no puso donde iban, y el resultado se sostuvo igual: alguien entró en cada compás y alguien cargó con lo que salió.</p>';
-  }else{
-    const cab=ranking[0];
-    c3=`<p>${af.length} de ${todas.length} compases ${af.length===1?'quedó afinado':'quedaron afinados'}. ${cab?`La voz que más sostuvo fue <strong>${cab[0]}</strong>, en ${cab[1]} ${cab[1]===1?'compás':'compases'}.`:''}</p>
-    <p>${ranking.length>1?'Lo demás lo sostuvieron '+ranking.slice(1).map(r=>r[0].toLowerCase()).join(', ')+'.':'Ese peso lo cargó una sola voz.'}</p>
-    <p class="marca">${todas.filter(f=>f.estado==='casi').length} compases casi en tono · ${ne.length} con la voz adentro y afuera del compás · ${todas.filter(f=>f.estado==='silencio').length} en silencio.</p>`;
-  }
+  /* --- para qué está hecho este coro --- */
+  const cob={}; EJES.forEach(e=>cob[e]=0);
+  S.coro.forEach(m=>EJES.forEach(e=>cob[e]+=VOCES[m.voz].ejes[e]));
+  const ordC=EJES.slice().sort((a,b)=>cob[b]-cob[a]);
+  const fuertes=vocesCoro.map(v=>VOCES[v]).sort((a,b)=>b.ejes[ordC[0]]-a.ejes[ordC[0]])[0];
+  const debil=ORDEN_VOCES.find(v=>VOCES[v].ejes[ordC[4]]===3);
+  const c4=`<p>El peso de este coro está en <strong>${EJE_NOM[ordC[0]]}</strong> y su punto más delgado es <strong>${EJE_NOM[ordC[4]]}</strong>. Con esa forma rinde en ${esc(LECCION[ordC[0]].rinde)}.</p>
+  <p>Le van a costar ${esc(LECCION[ordC[4]].terreno)}. Ahí este coro llega tarde, o llega y resuelve otra cosa.</p>
+  <p class="consejo">${esc(LECCION[ordC[4]].consejo)}</p>
+  <p>Cuando armes un equipo para un problema de esa clase, busca a alguien con perfil de <strong>${VOCES[debil].n}</strong>, y ponlo en el compás donde se decide, no en el que se ejecuta.</p>`;
 
   pinta(`<div class="aparece">
   <span class="rotulo">Cómo sonó</span>
   <h1 style="font-size:1.9rem;margin:6px 0 4px">Tres piezas, ${todas.length} compases</h1>
+  <div class="recaps">${recap}</div>
+  <div class="capa"><h3>Lo que sostuvo el coro</h3><div class="cuerpo">${c1}</div></div>
+  <div class="capa"><h3>Cómo se resolvía lo demás</h3><div class="cuerpo">${c2}</div></div>
+  <div class="capa"><h3>La voz que no estuvo en la sala</h3><div class="cuerpo">${c3}</div></div>
+  <div class="capa"><h3>Para qué está hecho este coro</h3><div class="cuerpo">${c4}</div></div>
   <div class="pauta-sep"></div>
-  <div class="capa"><h3>La voz que no estuvo en la sala</h3><div class="cuerpo">${c1}</div></div>
-  <div class="capa"><h3>La voz que estaba y no entró</h3><div class="cuerpo">${c2}</div></div>
-  <div class="capa"><h3>Lo que sostuvo el coro</h3><div class="cuerpo">${c3}</div></div>
-  <div class="pauta-sep"></div>
-  <p class="pie">Cada uno tiene una última pantalla en su propio teléfono.</p>
+  <p class="pie">Cada uno tiene una última pantalla en su propio teléfono, distinta según su voz.</p>
   <div style="margin-top:22px"><button class="btn fantasma" onclick="preguntaFinal()">Ir a mi última pantalla</button></div>
   </div>`);
 }
 
-/* ============ 10 · PREGUNTA FINAL ============ */
+/* ============ 10 · TU PARTITURA DE AQUÍ EN ADELANTE ============ */
 function preguntaFinal(){
-  const v=S.miVoz?VOCES[S.miVoz]:null;
-  pinta(`<div class="cierre-pregunta aparece">
-  <span class="rotulo" style="margin:0 auto">Tu última pantalla</span>
-  ${v?`<p style="margin:8px 0 0;font-size:1.05rem">Elegiste <strong>${v.n}</strong>.</p>`:''}
-  <div class="q">¿Fue esa la voz<br>que usaste?</div>
-  <p style="color:var(--grafito);font-size:.9rem;font-style:italic">No hay dónde responder. No hay pantalla siguiente.</p>
+  if(!S.miVoz){pinta(`<div class="aparece"><span class="rotulo">Fin</span><h2>El coro terminó</h2><p style="margin-top:14px">Esta pantalla se arma con la voz que elegiste al principio. Si estás llegando aquí sin haber elegido, vuelve al gabinete.</p><div style="margin-top:22px"><button class="btn" onclick="gabinete()">Abrir el gabinete</button></div></div>`);return;}
+  const v=VOCES[S.miVoz];
+  pinta(`<div class="aparece">
+  <span class="rotulo">Tu partitura de aquí en adelante</span>
+  <h1 style="font-size:2rem;margin:6px 0 8px">${v.n}</h1>
+  <p style="font-style:italic;color:var(--grafito)">${esc(v.sub)}</p>
+  <div class="pauta-sep"></div>
+
+  <div class="capa"><h3>Dónde rindes más</h3><div class="cuerpo"><p>${esc(v.fuerte)}</p>
+    <p>Cuando te asignen un problema de esta clase, no lo delegues: es donde tu manera de trabajar vale más que la de cualquier otro en la sala.</p></div></div>
+
+  <div class="capa"><h3>Dónde te va a costar</h3><div class="cuerpo"><p>${esc(v.dificil)}</p>
+    <p>Aquí la jugada no es esforzarte más. Es reconocer el terreno a tiempo y traer a alguien: ${v.afina.map(x=>`<strong>${x}</strong>`).join(', ')}.</p></div></div>
+
+  <div class="capa"><h3>Lo que puedes cultivar</h3><div class="cuerpo"><p>${esc(v.cultiva)}</p></div></div>
+
+  <div class="capa"><h3>Tres prácticas para volverlo costumbre</h3><div class="cuerpo">
+    <ol class="practicas">${v.practica.map(p=>`<li>${esc(p)}</li>`).join('')}</ol>
+    <p class="consejo">Elige una sola de las tres y sostenla ocho semanas. Las tres a la vez no se sostienen, y una sola, sostenida, cambia cómo te ve tu equipo.</p></div></div>
+
+  <div class="pauta-sep"></div>
+  <div class="cierre-q">
+    <p style="margin-bottom:6px">Antes de cerrar.</p>
+    <div class="q">¿La voz que elegiste<br>fue la que usaste?</div>
+    <p style="color:var(--grafito);font-size:.9rem;font-style:italic">No hay dónde responder. No hay pantalla siguiente.</p>
+  </div>
   </div>`);
 }
 
